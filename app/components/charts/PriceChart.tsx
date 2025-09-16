@@ -2,7 +2,6 @@
 
 import React, { memo, useMemo, useState, useRef } from 'react';
 import {
-  LineChart,
   Line,
   XAxis,
   YAxis,
@@ -10,7 +9,6 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceLine,
-  Area,
   ComposedChart,
   Bar
 } from 'recharts';
