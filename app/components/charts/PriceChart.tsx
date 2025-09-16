@@ -1,6 +1,6 @@
 'use client';
 
-import React, { memo, useMemo, useState, useEffect, useRef } from 'react';
+import React, { memo, useMemo, useState, useRef } from 'react';
 import {
   LineChart,
   Line,
@@ -14,7 +14,12 @@ import {
   ComposedChart,
   Bar
 } from 'recharts';
-import { motion, AnimatePresence } from 'framer-motion';
+// import { motion, AnimatePresence } from 'framer-motion';
+// Temporary motion replacement for build fix
+const motion = {
+  div: (props: any) => <div {...props} style={{ ...props.style, opacity: 1 }} />
+};
+const AnimatePresence = ({ children }: any) => children;
 import {
   TrendingUp,
   TrendingDown,

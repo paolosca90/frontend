@@ -2,7 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
+// import { motion } from 'framer-motion'
+// Temporary motion replacement for build fix
+const motion = {
+  div: (props: any) => <div {...props} style={{ ...props.style, opacity: 1 }} />
+}
 import { Eye, EyeOff, Brain, Zap, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
