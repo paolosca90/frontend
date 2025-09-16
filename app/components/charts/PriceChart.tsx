@@ -21,10 +21,7 @@ const AnimatePresence = ({ children }: any) => children;
 import {
   TrendingUp,
   TrendingDown,
-  ZoomIn,
-  ZoomOut,
   RotateCcw,
-  Settings,
   Maximize2,
   Eye,
   EyeOff
