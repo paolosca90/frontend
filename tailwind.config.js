@@ -148,6 +148,7 @@ module.exports = {
         'matrix-slide-in': 'matrix-slide-in 0.3s ease-out'
       },
       fontFamily: {
+<<<<<<< HEAD
         'sans': ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         'mono': ['var(--font-jetbrains-mono)', 'var(--font-source-code-pro)', 'Courier New', 'Monaco', 'Lucida Console', 'monospace'],
         'matrix': ['var(--font-jetbrains-mono)', 'var(--font-source-code-pro)', 'monospace'],
@@ -174,6 +175,9 @@ module.exports = {
         // Touch device detection
         'touch': { 'raw': '(hover: none) and (pointer: coarse)' },
         'no-touch': { 'raw': '(hover: hover) and (pointer: fine)' },
+=======
+        'mono': ['Courier Prime', 'Source Code Pro', 'Courier New', 'Monaco', 'Lucida Console', 'monospace'],
+>>>>>>> 977e771067b3a4d4e54b5ab2d301d5113c7abf09
       },
       boxShadow: {
         'matrix': '0 0 15px rgba(0, 255, 136, 0.3)',

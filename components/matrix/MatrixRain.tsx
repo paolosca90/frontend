@@ -93,7 +93,7 @@ const MatrixRain: React.FC<MatrixRainProps> = ({
       for (let i = 0; i < drops.length; i++) {
         const char = chars[Math.floor(Math.random() * chars.length)]
         const x = i * (canvas.width / columns)
-        const y = drops[i]
+        const y = drops[i] || 0
 
         // Add some randomness to brightness
         const brightness = Math.random() * 0.5 + 0.5
@@ -107,7 +107,7 @@ const MatrixRain: React.FC<MatrixRainProps> = ({
           ctx.shadowBlur = 0
         }
 
-        ctx.fillText(char, x, y)
+        ctx.fillText(char || '0', x, y)
 
         // Reset drop to top randomly or continue falling
         if (y > canvas.height && Math.random() > 0.975) {

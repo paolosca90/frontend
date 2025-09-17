@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
-import MatrixRain from '../../components/matrix/MatrixRain'
-import MatrixButton from '../../components/ui/MatrixButton'
+import MatrixRain from '../../../components/matrix/MatrixRain'
+import MatrixButton from '../../../components/ui/MatrixButton'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')

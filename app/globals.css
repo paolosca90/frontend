@@ -560,6 +560,10 @@ html, body {
   box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
 }
 
+.shadow-matrix-strong {
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+}
+
 .glow-matrix {
   text-shadow: 0 0 10px var(--matrix-green);
   box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
