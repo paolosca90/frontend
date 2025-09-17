@@ -74,7 +74,7 @@ const MatrixRain: React.FC<MatrixRainProps> = ({
         y: Math.random() * -height,
         speed: (Math.random() * 2 + 1) * speed,
         characters: Array.from({ length: dropHeight }, () =>
-          matrixCharacters[Math.floor(Math.random() * matrixCharacters.length)]
+          matrixCharacters[Math.floor(Math.random() * matrixCharacters.length)] || '0'
         ),
         brightness: Array.from({ length: dropHeight }, (_, index) =>
           Math.max(0, 1 - (index / dropHeight))
@@ -119,7 +119,7 @@ const MatrixRain: React.FC<MatrixRainProps> = ({
           // Randomize characters occasionally
           if (Math.random() < 0.1) {
             drop.characters = drop.characters.map(() =>
-              matrixCharacters[Math.floor(Math.random() * matrixCharacters.length)]
+              matrixCharacters[Math.floor(Math.random() * matrixCharacters.length)] || '0'
             )
           }
         }
@@ -127,7 +127,7 @@ const MatrixRain: React.FC<MatrixRainProps> = ({
         // Draw each character in the drop
         drop.characters.forEach((char, index) => {
           const charY = drop.y + (index * 20)
-          const brightness = drop.brightness[index]
+          const brightness = drop.brightness[index] || 0.5
 
           if (charY > 0 && charY < canvas.height + 20) {
             // Leading character is brightest (white/bright green)

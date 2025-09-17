@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
-import LoadingSpinner from '@/components/ui/loading-spinner'
+import LoadingSpinner from '@/app/components/ui/loading-spinner'
 
 // Lazy load signals components
 const SignalsLayout = dynamic(() => import('@/components/signals/signals-layout'), {

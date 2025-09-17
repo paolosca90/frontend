@@ -120,7 +120,7 @@ const SignalsList: React.FC<SignalsListProps> = ({ filters, className = '' }) =>
         // Add more mock signals for demonstration
         ...Array.from({ length: 15 }, (_, i) => ({
           id: `mock-${i + 6}`,
-          symbol: ['AUDUSD', 'USDCAD', 'NZDUSD', 'USDCHF', 'XAGUSD'][i % 5],
+          symbol: ['AUDUSD', 'USDCAD', 'NZDUSD', 'USDCHF', 'XAGUSD'][i % 5] || 'EURUSD',
           type: (i % 2 === 0 ? 'BUY' : 'SELL') as 'BUY' | 'SELL',
           strength: Math.floor(Math.random() * 40) + 60,
           entry: 1.2500 + (Math.random() * 0.1),
@@ -201,7 +201,7 @@ const SignalsList: React.FC<SignalsListProps> = ({ filters, className = '' }) =>
     return `${Math.floor(diffMinutes / 1440)}d ago`
   }
 
-  const renderSignalCard = (signal: Signal, index: number) => (
+  const renderSignalCard = (signal: Signal, _index: number) => (
     <div
       key={signal.id}
       className={`border rounded p-4 mb-4 transition-all cursor-pointer ${
@@ -275,22 +275,18 @@ const SignalsList: React.FC<SignalsListProps> = ({ filters, className = '' }) =>
           {signal.status === 'active' && (
             <div className="flex justify-end space-x-2">
               <MatrixButton
-                onClick={(e) => {
-                  e.stopPropagation()
-                  executeSignal(signal.id)
-                }}
+                onClick={() => executeSignal(signal.id)}
                 size="sm"
                 variant="secondary"
               >
                 EXECUTE
               </MatrixButton>
               <MatrixButton
-                onClick={(e) => {
-                  e.stopPropagation()
+                onClick={() => {
                   // Handle copy signal logic
                 }}
                 size="sm"
-                variant="outline"
+                variant="secondary"
               >
                 COPY
               </MatrixButton>
@@ -305,7 +301,7 @@ const SignalsList: React.FC<SignalsListProps> = ({ filters, className = '' }) =>
     return (
       <div className={`matrix-terminal p-6 ${className}`}>
         <div className="animate-pulse-matrix font-mono text-matrix-green mb-4">
-          > NEURAL_SCAN_IN_PROGRESS...
+          {'>'} NEURAL_SCAN_IN_PROGRESS...
         </div>
         <div className="space-y-4">
           {[...Array(5)].map((_, i) => (
@@ -335,7 +331,7 @@ const SignalsList: React.FC<SignalsListProps> = ({ filters, className = '' }) =>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="font-mono text-lg text-matrix-bright glow-matrix">
-            > NEURAL_SIGNALS_DETECTED
+            {'>'} NEURAL_SIGNALS_DETECTED
           </h3>
           <div className="font-mono text-sm text-matrix-dim mt-1">
             {signals.length} signal{signals.length !== 1 ? 's' : ''} found
@@ -344,7 +340,7 @@ const SignalsList: React.FC<SignalsListProps> = ({ filters, className = '' }) =>
         <div className="flex space-x-2">
           <MatrixButton
             onClick={loadSignals}
-            variant="outline"
+            variant="secondary"
             size="sm"
           >
             REFRESH
@@ -362,14 +358,14 @@ const SignalsList: React.FC<SignalsListProps> = ({ filters, className = '' }) =>
       {signals.length === 0 ? (
         <div className="text-center py-12">
           <div className="font-mono text-matrix-dim text-lg mb-2">
-            > NO SIGNALS MATCH CURRENT FILTERS
+            {'>'} NO SIGNALS MATCH CURRENT FILTERS
           </div>
           <div className="font-mono text-sm text-matrix-dim mb-6">
             Neural networks are scanning for new opportunities...
           </div>
           <MatrixButton
             onClick={() => window.location.reload()}
-            variant="outline"
+            variant="secondary"
           >
             RESET_FILTERS
           </MatrixButton>
@@ -378,6 +374,7 @@ const SignalsList: React.FC<SignalsListProps> = ({ filters, className = '' }) =>
         <VirtualList
           items={signals}
           itemHeight={120}
+          containerHeight={400}
           renderItem={(signal, index) => renderSignalCard(signal, index)}
           className="h-96"
         />

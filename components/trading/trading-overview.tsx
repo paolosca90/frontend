@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
 import MatrixButton from '@/components/ui/MatrixButton'
 import TypewriterText from '@/components/ui/TypewriterText'
 
@@ -24,7 +23,6 @@ interface MarketData {
 }
 
 const TradingOverview: React.FC = () => {
-  const { user } = useAuth()
   const [stats, setStats] = useState<TradingStats>({
     todayPnL: 0,
     weekPnL: 0,
@@ -74,7 +72,7 @@ const TradingOverview: React.FC = () => {
     return (
       <div className="matrix-terminal p-6 space-y-4">
         <div className="animate-pulse-matrix font-mono text-matrix-green">
-          > LOADING NEURAL_TRADING_DATA...
+          {'>'} LOADING NEURAL_TRADING_DATA...
         </div>
         <div className="space-y-2">
           {[...Array(3)].map((_, i) => (
@@ -90,7 +88,7 @@ const TradingOverview: React.FC = () => {
       {/* Header */}
       <div className="matrix-terminal p-4">
         <TypewriterText
-          text={`> NEURAL_TRADING_OVERVIEW - ${new Date().toLocaleDateString()}`}
+          text={`{'>'} NEURAL_TRADING_OVERVIEW - ${new Date().toLocaleDateString()}`}
           speed={30}
           className="text-xl font-mono text-matrix-bright glow-matrix"
         />
@@ -130,7 +128,7 @@ const TradingOverview: React.FC = () => {
       {/* Account Summary */}
       <div className="matrix-terminal p-6">
         <h3 className="font-mono text-lg text-matrix-bright glow-matrix mb-4">
-          > ACCOUNT_STATUS
+          {'>'} ACCOUNT_STATUS
         </h3>
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-3">
@@ -164,7 +162,7 @@ const TradingOverview: React.FC = () => {
       {/* Quick Market Data */}
       <div className="matrix-terminal p-6">
         <h3 className="font-mono text-lg text-matrix-bright glow-matrix mb-4">
-          > MARKET_PULSE
+          {'>'} MARKET_PULSE
         </h3>
         <div className="grid md:grid-cols-2 gap-4">
           {marketData.map((market) => (

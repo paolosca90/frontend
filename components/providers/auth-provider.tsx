@@ -19,6 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       return () => clearInterval(refreshInterval)
     }
+    return undefined
   }, [isAuthenticated, token, refreshToken])
 
   return <>{children}</>

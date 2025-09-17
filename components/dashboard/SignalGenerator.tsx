@@ -62,7 +62,7 @@ const SignalGenerator: React.FC = () => {
 
     // Mock signal generation
     const randomInstrument = selectedInstrument === 'ALL'
-      ? instruments.slice(1)[Math.floor(Math.random() * (instruments.length - 1))]
+      ? instruments.slice(1)[Math.floor(Math.random() * (instruments.length - 1))] || 'EURUSD'
       : selectedInstrument
 
     const direction: 'BUY' | 'SELL' = Math.random() > 0.5 ? 'BUY' : 'SELL'
@@ -111,7 +111,8 @@ const SignalGenerator: React.FC = () => {
       'BTC/USD': 45678.90,
       'SPX500': 4567.89
     }
-    return prices[instrument] + (Math.random() - 0.5) * (prices[instrument] * 0.01)
+    const basePrice = prices[instrument] || 1.0000
+    return basePrice + (Math.random() - 0.5) * (basePrice * 0.01)
   }
 
   const generateAIReasoning = (instrument: string, direction: 'BUY' | 'SELL', confidence: number): string => {
@@ -120,7 +121,8 @@ const SignalGenerator: React.FC = () => {
       `Deep learning analysis reveals institutional order flow favoring ${direction} positions in ${instrument}. Multi-timeframe momentum alignment confirms ${confidence}% confidence rating for this trading opportunity.`,
       `AI sentiment analysis combined with technical indicators suggests ${direction} bias for ${instrument}. Machine learning models trained on 10+ years of market data predict ${confidence}% success probability.`
     ]
-    return reasoningTemplates[Math.floor(Math.random() * reasoningTemplates.length)]
+    const selectedTemplate = reasoningTemplates[Math.floor(Math.random() * reasoningTemplates.length)]
+    return selectedTemplate || 'AI analysis indicates trading opportunity with high confidence.'
   }
 
   // Auto-generate signals every 30 seconds (for demo purposes)

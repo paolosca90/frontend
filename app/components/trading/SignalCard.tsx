@@ -69,6 +69,7 @@ const SignalCard: React.FC<SignalCardProps> = memo(({
       const timer = setTimeout(() => setShowActions(false), 3000);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [showActions]);
 
   const confidenceWidth = Math.min(Math.max(signal.confidence * 100, 0), 100);

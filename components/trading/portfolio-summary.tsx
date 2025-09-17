@@ -83,7 +83,7 @@ const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ className = '' }) =
     return (
       <div className={`matrix-terminal p-6 ${className}`}>
         <div className="animate-pulse-matrix font-mono text-matrix-green mb-4">
-          > LOADING PORTFOLIO_DATA...
+          {'>'} LOADING PORTFOLIO_DATA...
         </div>
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
@@ -108,7 +108,7 @@ const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ className = '' }) =
       {/* Header */}
       <div className="matrix-terminal p-4">
         <TypewriterText
-          text="> PORTFOLIO_NEURAL_SCAN"
+          text="{'>'} PORTFOLIO_NEURAL_SCAN"
           speed={30}
           className="text-xl font-mono text-matrix-bright glow-matrix"
         />
@@ -150,13 +150,13 @@ const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ className = '' }) =
       {/* Active Positions */}
       <div className="matrix-terminal p-6">
         <h3 className="font-mono text-lg text-matrix-bright glow-matrix mb-4">
-          > ACTIVE_POSITIONS
+          {'>'} ACTIVE_POSITIONS
         </h3>
 
         {positions.length === 0 ? (
           <div className="text-center py-8">
             <div className="font-mono text-matrix-dim">
-              > NO ACTIVE POSITIONS
+              {'>'} NO ACTIVE POSITIONS
             </div>
             <div className="font-mono text-sm text-matrix-dim mt-2">
               Ready for neural trading signals...
@@ -228,7 +228,7 @@ const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ className = '' }) =
           </MatrixButton>
           <MatrixButton
             onClick={() => window.location.reload()}
-            variant="outline"
+            variant="secondary"
             size="sm"
             className="flex-1 md:flex-none"
           >

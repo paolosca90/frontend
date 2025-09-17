@@ -144,7 +144,7 @@ const RecentSignals: React.FC<RecentSignalsProps> = ({ className = '' }) => {
     return (
       <div className={`matrix-terminal p-6 ${className}`}>
         <div className="animate-pulse-matrix font-mono text-matrix-green mb-4">
-          > SCANNING NEURAL_SIGNALS...
+          {'>'} SCANNING NEURAL_SIGNALS...
         </div>
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
@@ -170,7 +170,7 @@ const RecentSignals: React.FC<RecentSignalsProps> = ({ className = '' }) => {
       <div className="matrix-terminal p-4">
         <div className="flex items-center justify-between">
           <TypewriterText
-            text="> RECENT_NEURAL_SIGNALS"
+            text="{'>'} RECENT_NEURAL_SIGNALS"
             speed={30}
             className="text-xl font-mono text-matrix-bright glow-matrix"
           />
@@ -185,7 +185,7 @@ const RecentSignals: React.FC<RecentSignalsProps> = ({ className = '' }) => {
         {signals.length === 0 ? (
           <div className="text-center py-8">
             <div className="font-mono text-matrix-dim">
-              > NO RECENT SIGNALS
+              {'>'} NO RECENT SIGNALS
             </div>
             <div className="font-mono text-sm text-matrix-dim mt-2">
               Neural network scanning for opportunities...
@@ -274,7 +274,7 @@ const RecentSignals: React.FC<RecentSignalsProps> = ({ className = '' }) => {
           <div className="text-center mt-6 pt-6 border-t border-matrix-green/20">
             <MatrixButton
               onClick={() => window.location.href = '/signals'}
-              variant="outline"
+              variant="secondary"
             >
               VIEW_ALL_SIGNALS
             </MatrixButton>

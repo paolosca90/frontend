@@ -38,7 +38,7 @@ interface AuthProviderProps {
   children: ReactNode
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+const API_BASE_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)

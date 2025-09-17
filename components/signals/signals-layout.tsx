@@ -110,7 +110,7 @@ const SignalsLayout: React.FC<SignalsLayoutProps> = ({ children }) => {
             <div className="hidden md:block">
               <MatrixButton
                 onClick={() => window.location.reload()}
-                variant="outline"
+                variant="secondary"
                 size="sm"
               >
                 REFRESH_MATRIX

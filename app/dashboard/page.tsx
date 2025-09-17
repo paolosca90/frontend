@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
-import LoadingSpinner from '@/components/ui/loading-spinner'
+import LoadingSpinner from '@/app/components/ui/loading-spinner'
 
 // Lazy load dashboard components
 const DashboardLayout = dynamic(() => import('@/components/dashboard/dashboard-layout'), {

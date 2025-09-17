@@ -33,6 +33,7 @@ const TypewriterText: React.FC<TypewriterTextProps> = ({
     } else {
       setIsTyping(true)
     }
+    return undefined
   }, [delay])
 
   useEffect(() => {

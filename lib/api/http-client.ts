@@ -15,8 +15,7 @@ import type {
   APIError,
   HTTPMethod,
   APIEndpoint,
-  StatusCode,
-  ValidationError
+  StatusCode
 } from '@/types/api';
 
 // ============================================================================
@@ -132,7 +131,7 @@ class NetworkError extends APIClientError {
 /** Request timeout error */
 class TimeoutError extends APIClientError {
   constructor(message: string, public readonly timeout: number) {
-    super(message, 'TIMEOUT_ERROR', 408, { timeout });
+    super(message, 'TIMEOUT_ERROR', 408 as StatusCode, { timeout });
     this.name = 'TimeoutError';
     Object.setPrototypeOf(this, TimeoutError.prototype);
   }

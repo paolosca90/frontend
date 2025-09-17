@@ -33,7 +33,7 @@ const MatrixInput = forwardRef<HTMLInputElement, MatrixInputProps>(
         />
         {error && (
           <p className="text-sm text-red-400 font-mono">
-            > ERROR: {error}
+            {'>'} ERROR: {error}
           </p>
         )}
       </div>

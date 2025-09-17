@@ -10,11 +10,8 @@ import {
   Target,
   Shield,
   BarChart3,
-  Zap,
-  Clock,
   Award,
-  AlertTriangle,
-  Percent
+  AlertTriangle
 } from 'lucide-react';
 import { MarketStats } from '../../types/trading';
 import {
@@ -134,7 +131,7 @@ const StatsOverview: React.FC<StatsOverviewProps> = memo(({
 
   const gridCols = layout === 'grid' ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-1 md:grid-cols-6';
 
-  const statsData = [
+  const statsData: StatCardProps[] = [
     {
       title: 'Total P&L',
       value: formatCurrency(stats.totalPnL),

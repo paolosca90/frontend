@@ -28,7 +28,7 @@ const SignalFiltersComponent: React.FC<SignalFiltersProps> = ({ onFiltersChange,
   const [showAdvanced, setShowAdvanced] = useState(false)
 
   const availableSymbols = ['EURUSD', 'GBPUSD', 'USDJPY', 'USDCHF', 'AUDUSD', 'USDCAD', 'NZDUSD', 'XAUUSD', 'XAGUSD', 'BTCUSD']
-  const availableStatus = ['active', 'executed', 'completed', 'cancelled']
+  const availableStatus = ['active', 'executed', 'completed', 'cancelled'] as const
 
   const handleSymbolToggle = (symbol: string) => {
     const newSymbols = filters.symbols.includes(symbol)
@@ -50,7 +50,7 @@ const SignalFiltersComponent: React.FC<SignalFiltersProps> = ({ onFiltersChange,
     onFiltersChange?.(newFilters)
   }
 
-  const handleStatusToggle = (status: SignalFilters['status'][number]) => {
+  const handleStatusToggle = (status: typeof availableStatus[number]) => {
     const newStatus = filters.status.includes(status)
       ? filters.status.filter(s => s !== status)
       : [...filters.status, status]
@@ -100,7 +100,7 @@ const SignalFiltersComponent: React.FC<SignalFiltersProps> = ({ onFiltersChange,
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h3 className="font-mono text-lg text-matrix-bright glow-matrix">
-          > NEURAL_FILTERS
+          {'>'} NEURAL_FILTERS
         </h3>
         <div className="flex items-center space-x-2">
           {getFilterCount() > 0 && (
@@ -110,7 +110,7 @@ const SignalFiltersComponent: React.FC<SignalFiltersProps> = ({ onFiltersChange,
           )}
           <MatrixButton
             onClick={() => setShowAdvanced(!showAdvanced)}
-            variant="outline"
+            variant="secondary"
             size="sm"
           >
             {showAdvanced ? 'BASIC' : 'ADVANCED'}
@@ -269,7 +269,7 @@ const SignalFiltersComponent: React.FC<SignalFiltersProps> = ({ onFiltersChange,
         <div className="flex space-x-2">
           <MatrixButton
             onClick={() => window.location.reload()}
-            variant="outline"
+            variant="secondary"
             size="sm"
           >
             REFRESH
