@@ -228,7 +228,7 @@ export class TypedHTTPClient {
 
   constructor(config: Partial<HTTPClientConfig> = {}) {
     this.config = {
-      baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+      baseURL: process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3001',
       timeout: 30000,
       retryAttempts: 3,
       retryDelay: 1000,
@@ -372,10 +372,7 @@ export class TypedHTTPClient {
 
     await new Promise(resolve => setTimeout(resolve, delay));
 
-    return this.client({
-      ...config,
-      retryCount
-    });
+    return this.client(config);
   }
 
   /** Handle offline request queueing */
@@ -426,7 +423,7 @@ export class TypedHTTPClient {
       return {
         code: errorData.code || 'UNKNOWN_ERROR',
         message: errorData.message || error.message,
-        details: errorData.details,
+        details: errorData.details || {},
         field: errorData.field,
         statusCode: error.response.status as StatusCode,
         timestamp: errorData.timestamp || new Date().toISOString(),
