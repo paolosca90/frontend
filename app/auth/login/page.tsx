@@ -2,10 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-// import { motion } from 'framer-motion'
 // Temporary motion replacement for build fix
 const motion = {
-  div: (props: any) => <div {...props} style={{ ...props.style, opacity: 1 }} />
+  div: (props: any) => {
+    const { initial, animate, transition, ...rest } = props
+    return <div {...rest} />
+  }
 }
 import { Eye, EyeOff, Brain, Zap, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -57,7 +59,7 @@ export default function LoginPage() {
 
       {/* Back Button */}
       <div className="absolute top-4 left-4 z-20">
-        <Button variant="matrix-outline" size="sm" asChild>
+        <Button variant="outline" size="sm" asChild>
           <Link href="/">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Exit
@@ -72,13 +74,13 @@ export default function LoginPage() {
         transition={{ duration: 0.6 }}
         className="w-full max-w-md relative z-10"
       >
-        <Card className="bg-matrix-dark-200/90 border-matrix-500/30 backdrop-blur-sm">
+        <Card className="bg-black/90 border-matrix-green/30 backdrop-blur-sm">
           <CardHeader className="text-center pb-8">
-            <div className="w-16 h-16 bg-matrix-500/20 border border-matrix-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Brain className="w-8 h-8 text-matrix-500" />
+            <div className="w-16 h-16 bg-matrix-green/20 border border-matrix-green rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Brain className="w-8 h-8 text-matrix-green" />
             </div>
             <CardTitle className="text-2xl font-bold text-white mb-2">
-              ACCESS <span className="text-matrix-500 font-mono">MATRIX</span>
+              ACCESS <span className="text-matrix-green font-mono">MATRIX</span>
             </CardTitle>
             <p className="text-gray-400 text-sm">
               Enter your credentials to establish neural link
@@ -94,7 +96,7 @@ export default function LoginPage() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-matrix-500 font-mono text-sm">
+                <Label htmlFor="email" className="text-matrix-green font-mono text-sm">
                   EMAIL_ADDRESS
                 </Label>
                 <Input
@@ -102,14 +104,14 @@ export default function LoginPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500"
+                  className="bg-black border-matrix-green/30 text-white placeholder:text-gray-500 focus:border-matrix-green focus:ring-matrix-green"
                   placeholder="your.email@domain.com"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-matrix-500 font-mono text-sm">
+                <Label htmlFor="password" className="text-matrix-green font-mono text-sm">
                   SECURE_KEY
                 </Label>
                 <div className="relative">
@@ -118,7 +120,7 @@ export default function LoginPage() {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500 pr-12"
+                    className="bg-black border-matrix-green/30 text-white placeholder:text-gray-500 focus:border-matrix-green focus:ring-matrix-green pr-12"
                     placeholder="••••••••••••"
                     required
                   />
@@ -126,7 +128,7 @@ export default function LoginPage() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-matrix-500"
+                    className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-matrix-green"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -140,9 +142,8 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                variant="matrix"
+                className="w-full bg-matrix-green text-black hover:bg-matrix-green/90"
                 size="lg"
-                className="w-full"
                 disabled={isLoading || authLoading}
               >
                 {isLoading || authLoading ? (
@@ -161,19 +162,19 @@ export default function LoginPage() {
               <div className="text-center">
                 <Link
                   href="/auth/forgot-password"
-                  className="text-sm text-matrix-500 hover:text-matrix-400 font-mono"
+                  className="text-sm text-matrix-green hover:text-matrix-green/80 font-mono"
                 >
                   FORGOT_ACCESS_KEY?
                 </Link>
               </div>
             </form>
 
-            <div className="mt-8 pt-6 border-t border-matrix-500/20">
+            <div className="mt-8 pt-6 border-t border-matrix-green/20">
               <div className="text-center space-y-4">
                 <p className="text-gray-400 text-sm">
                   Need system access?
                 </p>
-                <Button variant="matrix-outline" size="lg" className="w-full" asChild>
+                <Button variant="outline" size="lg" className="w-full border-matrix-green text-matrix-green hover:bg-matrix-green/10" asChild>
                   <Link href="/auth/register">
                     <Brain className="w-4 h-4 mr-2" />
                     REQUEST_ACCESS

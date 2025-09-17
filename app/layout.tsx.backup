@@ -4,19 +4,14 @@ import { Inter } from 'next/font/google'
 import { MatrixProvider } from '@/contexts/MatrixContext'
 import { AuthProvider } from '@/contexts/AuthContext'
 import MatrixEffects from '@/components/matrix/MatrixEffects'
-import { SimpleToaster } from '@/components/ui/toaster'
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'AI Cash Revolution | Jack Into The Matrix',
   description: 'Enter the Matrix of AI-powered trading. Take the red pill and revolutionize your trading experience.',
-}
-
-export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 1,
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
 }
 
 export default function RootLayout({
@@ -42,7 +37,7 @@ export default function RootLayout({
             <div className="relative z-10 min-h-screen">
               {children}
             </div>
-            <SimpleToaster />
+            <Toaster />
           </AuthProvider>
         </MatrixProvider>
       </body>

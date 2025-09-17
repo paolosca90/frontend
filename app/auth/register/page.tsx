@@ -2,12 +2,14 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-// import { motion } from 'framer-motion'
 // Temporary motion replacement for build fix
 const motion = {
-  div: (props: any) => <div {...props} style={{ ...props.style, opacity: 1 }} />
+  div: (props: any) => {
+    const { initial, animate, transition, ...rest } = props
+    return <div {...rest} />
+  }
 }
-import { Eye, EyeOff, Brain, Zap, ArrowLeft, User, Mail, Lock } from 'lucide-react'
+import { Eye, EyeOff, Brain, Zap, ArrowLeft, Lock } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -49,7 +51,7 @@ export default function RegisterPage() {
       toast.success('Neural interface activated! Welcome to the Matrix.')
       router.push('/dashboard')
     } catch (error: any) {
-      toast.error(error.message || 'System access denied. Try again.')
+      toast.error(error.message || 'Registration failed. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -59,10 +61,10 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center p-4">
       {/* Matrix Background Effect */}
       <div className="absolute inset-0 opacity-5">
-        <div className="h-full w-full bg-matrix-500">
+        <div className="h-full w-full bg-matrix-green">
           <div className="grid grid-cols-20 h-full animate-matrix-rain">
             {Array.from({ length: 100 }, (_, i) => (
-              <div key={i} className="text-matrix-500 text-xs">
+              <div key={i} className="text-matrix-green text-xs">
                 {Math.random() > 0.5 ? '1' : '0'}
               </div>
             ))}
@@ -72,10 +74,10 @@ export default function RegisterPage() {
 
       {/* Back Button */}
       <div className="absolute top-4 left-4 z-20">
-        <Button variant="matrix-outline" size="sm" asChild>
+        <Button variant="outline" size="sm" asChild>
           <Link href="/">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Exit
+            Exit Matrix
           </Link>
         </Button>
       </div>
@@ -87,16 +89,16 @@ export default function RegisterPage() {
         transition={{ duration: 0.6 }}
         className="w-full max-w-md relative z-10"
       >
-        <Card className="bg-matrix-dark-200/90 border-matrix-500/30 backdrop-blur-sm">
+        <Card className="bg-black/90 border-matrix-green/30 backdrop-blur-sm">
           <CardHeader className="text-center pb-8">
-            <div className="w-16 h-16 bg-matrix-500/20 border border-matrix-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Brain className="w-8 h-8 text-matrix-500" />
+            <div className="w-16 h-16 bg-matrix-green/20 border border-matrix-green rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Brain className="w-8 h-8 text-matrix-green" />
             </div>
             <CardTitle className="text-2xl font-bold text-white mb-2">
-              REQUEST <span className="text-matrix-500 font-mono">ACCESS</span>
+              JOIN <span className="text-matrix-green font-mono">MATRIX</span>
             </CardTitle>
             <p className="text-gray-400 text-sm">
-              Initialize your neural interface to the trading matrix
+              Request access to the neural network
             </p>
           </CardHeader>
 
@@ -109,53 +111,46 @@ export default function RegisterPage() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-matrix-500 font-mono text-sm">
-                  USER_IDENTITY
+                <Label htmlFor="name" className="text-matrix-green font-mono text-sm">
+                  IDENTITY_NAME
                 </Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <Input
-                    id="name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500 pl-10"
-                    placeholder="Enter your name"
-                    required
-                  />
-                </div>
+                <Input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="bg-black border-matrix-green/30 text-white placeholder:text-gray-500 focus:border-matrix-green focus:ring-matrix-green"
+                  placeholder="Your name in the Matrix"
+                  required
+                />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-matrix-500 font-mono text-sm">
-                  NEURAL_ADDRESS
+                <Label htmlFor="email" className="text-matrix-green font-mono text-sm">
+                  EMAIL_ADDRESS
                 </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500 pl-10"
-                    placeholder="your.email@domain.com"
-                    required
-                  />
-                </div>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-black border-matrix-green/30 text-white placeholder:text-gray-500 focus:border-matrix-green focus:ring-matrix-green"
+                  placeholder="your.email@domain.com"
+                  required
+                />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-matrix-500 font-mono text-sm">
-                  SECURITY_KEY
+                <Label htmlFor="password" className="text-matrix-green font-mono text-sm">
+                  SECURE_KEY
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500 pl-10 pr-12"
+                    className="bg-black border-matrix-green/30 text-white placeholder:text-gray-500 focus:border-matrix-green focus:ring-matrix-green pr-12"
                     placeholder="••••••••••••"
                     required
                   />
@@ -163,7 +158,7 @@ export default function RegisterPage() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-matrix-500"
+                    className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-matrix-green"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -176,17 +171,16 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-matrix-500 font-mono text-sm">
-                  VERIFY_KEY
+                <Label htmlFor="confirmPassword" className="text-matrix-green font-mono text-sm">
+                  CONFIRM_KEY
                 </Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
                   <Input
                     id="confirmPassword"
                     type={showConfirmPassword ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500 pl-10 pr-12"
+                    className="bg-black border-matrix-green/30 text-white placeholder:text-gray-500 focus:border-matrix-green focus:ring-matrix-green pr-12"
                     placeholder="••••••••••••"
                     required
                   />
@@ -194,7 +188,7 @@ export default function RegisterPage() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-matrix-500"
+                    className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-matrix-green"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
@@ -208,45 +202,33 @@ export default function RegisterPage() {
 
               <Button
                 type="submit"
-                variant="matrix"
+                className="w-full bg-matrix-green text-black hover:bg-matrix-green/90"
                 size="lg"
-                className="w-full"
                 disabled={isLoading || authLoading}
               >
                 {isLoading || authLoading ? (
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4 animate-pulse" />
-                    INITIALIZING INTERFACE...
+                    INITIALIZING...
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4" />
-                    ACTIVATE NEURAL LINK
+                    <Brain className="w-4 h-4" />
+                    ACTIVATE_NEURAL_LINK
                   </div>
                 )}
               </Button>
-
-              <div className="text-center text-xs text-gray-400">
-                By activating your neural interface, you agree to the{' '}
-                <Link href="/terms" className="text-matrix-500 hover:text-matrix-400 font-mono">
-                  SYSTEM_PROTOCOLS
-                </Link>{' '}
-                and{' '}
-                <Link href="/privacy" className="text-matrix-500 hover:text-matrix-400 font-mono">
-                  DATA_ENCRYPTION_POLICY
-                </Link>
-              </div>
             </form>
 
-            <div className="mt-8 pt-6 border-t border-matrix-500/20">
+            <div className="mt-8 pt-6 border-t border-matrix-green/20">
               <div className="text-center space-y-4">
                 <p className="text-gray-400 text-sm">
-                  Already connected to the Matrix?
+                  Already have access?
                 </p>
-                <Button variant="matrix-outline" size="lg" className="w-full" asChild>
+                <Button variant="outline" size="lg" className="w-full border-matrix-green text-matrix-green hover:bg-matrix-green/10" asChild>
                   <Link href="/auth/login">
-                    <Brain className="w-4 h-4 mr-2" />
-                    ACCESS_EXISTING_LINK
+                    <Lock className="w-4 h-4 mr-2" />
+                    ENTER_MATRIX
                   </Link>
                 </Button>
               </div>
@@ -257,7 +239,7 @@ export default function RegisterPage() {
         {/* Matrix-style footer */}
         <div className="text-center mt-6">
           <p className="text-gray-500 text-xs font-mono">
-            &gt; NEURAL_INTERFACE_PROTOCOL_v3.2_
+            &gt; NEURAL_LINK_PROTOCOL_v2.1_
           </p>
         </div>
       </motion.div>
