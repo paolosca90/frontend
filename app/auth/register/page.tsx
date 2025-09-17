@@ -1,10 +1,13 @@
 'use client'
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import MatrixRain from '../../../components/matrix/MatrixRain'
 import MatrixButton from '../../../components/ui/MatrixButton'
+import { authAPI, handleAPIError } from '../../../lib/api'
 
 export default function RegisterPage() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,6 +18,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [agreedToTerms, setAgreedToTerms] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -23,19 +27,48 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError('')
+
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match')
+      setError('Passwords do not match')
+      return
+    }
+
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long')
       return
     }
 
     setIsLoading(true)
 
-    // Simulate registration process
-    setTimeout(() => {
+    try {
+      // Split name into first and last name
+      const nameParts = formData.name.trim().split(' ')
+      const firstName = nameParts[0] || ''
+      const lastName = nameParts.slice(1).join(' ')
+
+      // Call registration API
+      const response = await authAPI.register(
+        formData.email,
+        formData.password,
+        firstName,
+        lastName
+      )
+
+      // Store the token
+      if (response.token) {
+        localStorage.setItem('matrix_token', response.token)
+      }
+
+      // Redirect to dashboard or login page
+      router.push('/dashboard')
+
+    } catch (err: any) {
+      console.error('Registration error:', err)
+      setError(handleAPIError(err))
+    } finally {
       setIsLoading(false)
-      // Add actual registration logic here
-      console.log('Registration attempt:', formData)
-    }, 2000)
+    }
   }
 
   const isFormValid = formData.name && formData.email && formData.password &&
@@ -75,6 +108,13 @@ export default function RegisterPage() {
               </p>
               <div className="w-16 h-0.5 bg-matrix-green mx-auto mt-4 animate-pulse-matrix" />
             </div>
+
+            {/* Error Display */}
+            {error && (
+              <div className="bg-red-900/20 border border-red-500 rounded-lg p-4 mb-6">
+                <p className="text-red-400 font-matrix text-sm">{error}</p>
+              </div>
+            )}
 
             {/* Registration Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
