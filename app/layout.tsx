@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { MatrixProvider } from '@/contexts/MatrixContext'
 import { AuthProvider } from '@/contexts/AuthContext'
-import { MatrixEffects } from '@/components/matrix/MatrixEffects'
+import MatrixEffects from '@/components/matrix/MatrixEffects'
 import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'] })

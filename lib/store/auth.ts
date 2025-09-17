@@ -32,7 +32,7 @@ interface AuthState {
 }
 
 // Get API base URL from environment
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://aicash-revolution-server-production.up.railway.app'
+const API_BASE_URL = process.env['NEXT_PUBLIC_API_URL'] || 'https://aicash-revolution-server-production.up.railway.app'
 
 // Configure axios instance
 const api = axios.create({

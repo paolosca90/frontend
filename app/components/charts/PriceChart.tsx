@@ -1,8 +1,7 @@
 'use client';
 
-import React, { memo, useMemo, useState, useEffect, useRef } from 'react';
+import React, { memo, useMemo, useState, useRef } from 'react';
 import {
-  LineChart,
   Line,
   XAxis,
   YAxis,
@@ -10,25 +9,26 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceLine,
-  Area,
   ComposedChart,
   Bar
 } from 'recharts';
-import { motion, AnimatePresence } from 'framer-motion';
+// import { motion, AnimatePresence } from 'framer-motion';
+// Temporary motion replacement for build fix
+const motion = {
+  div: (props: any) => <div {...props} style={{ ...props.style, opacity: 1 }} />
+};
+const AnimatePresence = ({ children }: any) => children;
 import {
   TrendingUp,
   TrendingDown,
-  ZoomIn,
-  ZoomOut,
   RotateCcw,
-  Settings,
   Maximize2,
   Eye,
   EyeOff
 } from 'lucide-react';
 import { PriceData, TradingSignal, ChartTimeframe } from '../../types/trading';
 import { useTouchGestures } from '../../hooks/useTouchGestures';
-import { formatPrice, formatTimeAgo } from '../../utils/formatters';
+import { formatPrice } from '../../utils/formatters';
 
 interface PriceChartProps {
   data: PriceData[];
@@ -82,7 +82,7 @@ const PriceChart: React.FC<PriceChartProps> = memo(({
 
   // Prepare chart data with volume
   const chartData = useMemo(() => {
-    return data.map((item, index) => ({
+    return data.map((item) => ({
       ...item,
       timestamp: item.timestamp,
       time: new Date(item.timestamp).toLocaleTimeString('en-US', {
@@ -102,7 +102,10 @@ const PriceChart: React.FC<PriceChartProps> = memo(({
       if (onTimeframeChange) {
         const currentIndex = timeframes.findIndex(tf => tf.value === timeframe.value);
         if (currentIndex > 0) {
-          onTimeframeChange(timeframes[currentIndex - 1]);
+          const newTimeframe = timeframes[currentIndex - 1];
+          if (newTimeframe) {
+            onTimeframeChange(newTimeframe);
+          }
         }
       }
     },
@@ -110,16 +113,20 @@ const PriceChart: React.FC<PriceChartProps> = memo(({
       if (onTimeframeChange) {
         const currentIndex = timeframes.findIndex(tf => tf.value === timeframe.value);
         if (currentIndex < timeframes.length - 1) {
-          onTimeframeChange(timeframes[currentIndex + 1]);
+          const newTimeframe = timeframes[currentIndex + 1];
+          if (newTimeframe) {
+            onTimeframeChange(newTimeframe);
+          }
         }
       }
     },
     onTap: (event) => {
       const rect = chartRef.current?.getBoundingClientRect();
-      if (rect) {
+      const touch = event.touches[0];
+      if (rect && touch) {
         setCrosshair({
-          x: event.touches[0].clientX - rect.left,
-          y: event.touches[0].clientY - rect.top
+          x: touch.clientX - rect.left,
+          y: touch.clientY - rect.top
         });
         setTimeout(() => setCrosshair(null), 2000);
       }
@@ -127,7 +134,7 @@ const PriceChart: React.FC<PriceChartProps> = memo(({
   });
 
   // Custom tooltip
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload }: any) => {
     if (!active || !payload || payload.length === 0) return null;
 
     const data = payload[0].payload;
@@ -167,9 +174,10 @@ const PriceChart: React.FC<PriceChartProps> = memo(({
     );
   };
 
-  const currentPrice = data.length > 0 ? data[data.length - 1].close : 0;
-  const priceChange = data.length > 1 ? currentPrice - data[data.length - 2].close : 0;
-  const priceChangePercent = data.length > 1 ? (priceChange / data[data.length - 2].close) * 100 : 0;
+  const currentPrice = data.length > 0 ? data[data.length - 1]?.close ?? 0 : 0;
+  const previousPrice = data.length > 1 ? data[data.length - 2]?.close ?? 0 : 0;
+  const priceChange = data.length > 1 ? currentPrice - previousPrice : 0;
+  const priceChangePercent = data.length > 1 && previousPrice !== 0 ? (priceChange / previousPrice) * 100 : 0;
 
   return (
     <div

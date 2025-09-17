@@ -15,8 +15,7 @@ import type {
   APIError,
   HTTPMethod,
   APIEndpoint,
-  StatusCode,
-  ValidationError
+  StatusCode
 } from '@/types/api';
 
 // ============================================================================
@@ -132,7 +131,7 @@ class NetworkError extends APIClientError {
 /** Request timeout error */
 class TimeoutError extends APIClientError {
   constructor(message: string, public readonly timeout: number) {
-    super(message, 'TIMEOUT_ERROR', 408, { timeout });
+    super(message, 'TIMEOUT_ERROR', 408 as StatusCode, { timeout });
     this.name = 'TimeoutError';
     Object.setPrototypeOf(this, TimeoutError.prototype);
   }
@@ -229,7 +228,7 @@ export class TypedHTTPClient {
 
   constructor(config: Partial<HTTPClientConfig> = {}) {
     this.config = {
-      baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+      baseURL: process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3001',
       timeout: 30000,
       retryAttempts: 3,
       retryDelay: 1000,
@@ -373,10 +372,7 @@ export class TypedHTTPClient {
 
     await new Promise(resolve => setTimeout(resolve, delay));
 
-    return this.client({
-      ...config,
-      retryCount
-    });
+    return this.client(config);
   }
 
   /** Handle offline request queueing */
@@ -424,15 +420,21 @@ export class TypedHTTPClient {
     // API errors with structured response
     if (error.response?.data) {
       const errorData = error.response.data as APIError;
-      return {
+      const apiError: APIError = {
         code: errorData.code || 'UNKNOWN_ERROR',
         message: errorData.message || error.message,
-        details: errorData.details,
-        field: errorData.field,
+        details: errorData.details || {},
         statusCode: error.response.status as StatusCode,
         timestamp: errorData.timestamp || new Date().toISOString(),
         requestId: error.config?.headers?.[this.config.requestIdHeader] as string || generateRequestId()
       };
+
+      // Only include field if it's actually defined
+      if (errorData.field !== undefined) {
+        (apiError as APIError & { field: string }).field = errorData.field;
+      }
+
+      return apiError;
     }
 
     // Generic error
@@ -478,6 +480,11 @@ export class TypedHTTPClient {
       url: config.url || '/',
       method: config.method || 'GET'
     };
+
+    // Ensure headers are properly initialized
+    if (!fullConfig.headers) {
+      fullConfig.headers = {};
+    }
 
     // Check cache for GET requests
     if (fullConfig.method === 'GET' && config.cache !== false) {
@@ -553,7 +560,12 @@ export class TypedHTTPClient {
     data?: TRequest,
     config?: Omit<TypedRequestConfig<TRequest>, 'method' | 'url' | 'data'>
   ): Promise<APIResponse<TResponse>> {
-    return this.request<TResponse, TRequest>({ ...config, method: 'POST', url, data });
+    return this.request<TResponse, TRequest>({
+      ...config,
+      method: 'POST',
+      url,
+      ...(data !== undefined && { data })
+    });
   }
 
   public put<TResponse = unknown, TRequest = unknown>(
@@ -561,7 +573,12 @@ export class TypedHTTPClient {
     data?: TRequest,
     config?: Omit<TypedRequestConfig<TRequest>, 'method' | 'url' | 'data'>
   ): Promise<APIResponse<TResponse>> {
-    return this.request<TResponse, TRequest>({ ...config, method: 'PUT', url, data });
+    return this.request<TResponse, TRequest>({
+      ...config,
+      method: 'PUT',
+      url,
+      ...(data !== undefined && { data })
+    });
   }
 
   public patch<TResponse = unknown, TRequest = unknown>(
@@ -569,7 +586,12 @@ export class TypedHTTPClient {
     data?: TRequest,
     config?: Omit<TypedRequestConfig<TRequest>, 'method' | 'url' | 'data'>
   ): Promise<APIResponse<TResponse>> {
-    return this.request<TResponse, TRequest>({ ...config, method: 'PATCH', url, data });
+    return this.request<TResponse, TRequest>({
+      ...config,
+      method: 'PATCH',
+      url,
+      ...(data !== undefined && { data })
+    });
   }
 
   public delete<TResponse = unknown>(

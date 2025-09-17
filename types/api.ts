@@ -664,8 +664,8 @@ type RequestBodyForMethod<TMethod extends HTTPMethod> =
 /** API endpoint configuration */
 interface APIEndpointConfig<
   TMethod extends HTTPMethod = HTTPMethod,
-  TRequest = unknown,
-  TResponse = unknown
+  _TRequest = unknown,
+  _TResponse = unknown
 > {
   readonly method: TMethod;
   readonly path: APIEndpoint;
@@ -687,11 +687,13 @@ interface APIEndpoints {
   'auth/reset-password': APIEndpointConfig<'POST', ResetPasswordRequest, { success: boolean }>;
   'auth/change-password': APIEndpointConfig<'PUT', ChangePasswordRequest, { success: boolean }>;
 
-  // User Management
-  'user/profile': APIEndpointConfig<'GET', never, User>;
-  'user/profile': APIEndpointConfig<'PUT', Partial<UserProfile>, User>;
-  'user/settings': APIEndpointConfig<'GET', never, UserSettings>;
-  'user/settings': APIEndpointConfig<'PUT', Partial<UserSettings>, UserSettings>;
+  // User Management - GET endpoints
+  'user/profile/get': APIEndpointConfig<'GET', never, User>;
+  'user/settings/get': APIEndpointConfig<'GET', never, UserSettings>;
+
+  // User Management - PUT endpoints
+  'user/profile/update': APIEndpointConfig<'PUT', Partial<UserProfile>, User>;
+  'user/settings/update': APIEndpointConfig<'PUT', Partial<UserSettings>, UserSettings>;
 
   // Trading Signals
   'signals': APIEndpointConfig<'GET', never, PaginatedResponse<TradingSignal>>;

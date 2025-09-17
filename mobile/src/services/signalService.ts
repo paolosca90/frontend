@@ -1,9 +1,12 @@
 import axios from 'axios';
 
+// Type-safe environment variable access
+const isDevelopment = process.env['NODE_ENV'] === 'development';
+
 // API base URL - configure based on environment
-const API_BASE_URL = __DEV__
-  ? 'http://localhost:3000/api'
-  : 'https://api.ai-cash-revolution.com/api';
+const API_BASE_URL = isDevelopment
+  ? process.env['NEXT_PUBLIC_API_URL_DEV'] || 'http://localhost:3000/api'
+  : process.env['NEXT_PUBLIC_API_URL'] || 'https://api.ai-cash-revolution.com/api';
 
 // Create axios instance for signals API
 const signalApiClient = axios.create({

@@ -111,7 +111,10 @@ const MatrixTerminal: React.FC = () => {
       // Add responses with delay for typewriter effect
       for (let i = 0; i < responses.length; i++) {
         await new Promise(resolve => setTimeout(resolve, 200))
-        addToHistory(responses[i])
+        const response = responses[i]
+        if (response) {
+          addToHistory(response)
+        }
       }
     } else if (normalizedCmd.includes('neo') || normalizedCmd.includes('matrix')) {
       addToHistory('> You are the One, Neo.')
@@ -190,7 +193,7 @@ const MatrixTerminal: React.FC = () => {
             {isProcessing && (
               <div className="font-mono text-sm text-matrix-bright">
                 <TypewriterText
-                  text="> Processing command..."
+                  text="{'>'} Processing command..."
                   speed={50}
                   className="animate-pulse-matrix"
                 />

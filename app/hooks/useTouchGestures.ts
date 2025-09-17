@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useRef, useEffect } from 'react';
-import { TouchGesture } from '../types/trading';
 
 interface TouchGestureHandlers {
   onTap?: (event: TouchEvent) => void;
@@ -48,6 +47,8 @@ export const useTouchGestures = (
     const touch1 = touches[0];
     const touch2 = touches[1];
 
+    if (!touch1 || !touch2) return 0;
+
     return Math.sqrt(
       Math.pow(touch2.clientX - touch1.clientX, 2) +
       Math.pow(touch2.clientY - touch1.clientY, 2)
@@ -61,6 +62,8 @@ export const useTouchGestures = (
 
     const touch = event.touches[0];
     const touchCount = event.touches.length;
+
+    if (!touch) return;
 
     touchStartRef.current = {
       x: touch.clientX,
@@ -104,12 +107,14 @@ export const useTouchGestures = (
     // Cancel long press if finger moves too much
     if (longPressTimerRef.current) {
       const touch = event.touches[0];
-      const deltaX = Math.abs(touch.clientX - touchStartRef.current.x);
-      const deltaY = Math.abs(touch.clientY - touchStartRef.current.y);
+      if (touch) {
+        const deltaX = Math.abs(touch.clientX - touchStartRef.current.x);
+        const deltaY = Math.abs(touch.clientY - touchStartRef.current.y);
 
-      if (deltaX > 10 || deltaY > 10) {
-        clearTimeout(longPressTimerRef.current);
-        longPressTimerRef.current = undefined;
+        if (deltaX > 10 || deltaY > 10) {
+          clearTimeout(longPressTimerRef.current);
+          longPressTimerRef.current = undefined;
+        }
       }
     }
   }, [preventDefault, getTouchDistance, pinchThreshold, handlers]);
@@ -128,6 +133,8 @@ export const useTouchGestures = (
     }
 
     const touch = event.changedTouches[0];
+    if (!touch) return;
+
     const deltaX = touch.clientX - touchStartRef.current.x;
     const deltaY = touch.clientY - touchStartRef.current.y;
     const deltaTime = Date.now() - touchStartRef.current.timestamp;

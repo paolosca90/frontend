@@ -28,6 +28,7 @@ const MatrixDashboard: React.FC = () => {
       const timer = setTimeout(() => setShowGreeting(false), 5000)
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [user, addToHistory])
 
   const handleViewChange = (view: typeof currentView) => {
@@ -48,24 +49,24 @@ const MatrixDashboard: React.FC = () => {
         <div className="matrix-terminal p-8 max-w-4xl w-full">
           <div className="space-y-6 font-mono">
             <TypewriterText
-              text={`> WELCOME TO THE MATRIX, ${user?.firstName?.toUpperCase() || 'NEO'}`}
+              text={`{'>'} WELCOME TO THE MATRIX, ${user?.firstName?.toUpperCase() || 'NEO'}`}
               speed={50}
               className="text-3xl text-center glow-matrix"
             />
             <TypewriterText
-              text="> NEURAL INTERFACE SYNCHRONIZED"
+              text="{'>'} NEURAL INTERFACE SYNCHRONIZED"
               speed={40}
               delay={2000}
               className="text-xl text-center"
             />
             <TypewriterText
-              text="> TRADING ALGORITHMS ONLINE"
+              text="{'>'} TRADING ALGORITHMS ONLINE"
               speed={40}
               delay={3000}
               className="text-xl text-center"
             />
             <TypewriterText
-              text="> AI CASH REVOLUTION ACTIVATED"
+              text="{'>'} AI CASH REVOLUTION ACTIVATED"
               speed={40}
               delay={4000}
               className="text-2xl text-center text-matrix-bright glow-matrix"

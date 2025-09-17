@@ -58,10 +58,12 @@ const TradingInterface: React.FC = () => {
     const interval = setInterval(() => {
       // Simulate price movements with Matrix-style glitch effect
       const randomPair = tradingPairs[Math.floor(Math.random() * tradingPairs.length)]
-      const priceChange = (Math.random() - 0.5) * 0.01
-      randomPair.price += priceChange
-      randomPair.change += priceChange
-      randomPair.changePercent = (randomPair.change / randomPair.price) * 100
+      if (randomPair) {
+        const priceChange = (Math.random() - 0.5) * 0.01
+        randomPair.price += priceChange
+        randomPair.change += priceChange
+        randomPair.changePercent = (randomPair.change / randomPair.price) * 100
+      }
     }, 2000)
 
     return () => clearInterval(interval)

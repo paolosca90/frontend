@@ -1,3 +1,112 @@
+import React from 'react';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { ThemedText } from '../ui/ThemedText';
+import { ThemedCard } from '../ui/ThemedCard';
+import type { TradingSignal } from '@/types/api';
+import { formatPrice, getTimeUntilExpiry } from '../../utils/formatters';
+
+interface SignalCardProps {
+  signal: TradingSignal;
+  onPress?: () => void;
+}
+
+const SignalCard: React.FC<SignalCardProps> = ({ signal, onPress }) => {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return '#00ff88';
+      case 'executed': return '#ffaa00';
+      case 'expired': return '#ff4444';
+      case 'completed': return '#0099ff';
+      default: return '#666';
+    }
+  };
+
+  const getDirectionIcon = (type: 'BUY' | 'SELL') => {
+    return type === 'BUY' ? 'trending-up' : 'trending-down';
+  };
+
+  const getDirectionColor = (type: 'BUY' | 'SELL') => {
+    return type === 'BUY' ? '#00ff88' : '#ff4444';
+  };
+
+  return (
+    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
+      <ThemedCard style={[styles.cardContent, { borderLeftColor: getStatusColor(signal.status) }]}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.leftSection}>
+            <Ionicons
+              name={getDirectionIcon(signal.type)}
+              size={20}
+              color={getDirectionColor(signal.type)}
+            />
+            <ThemedText variant="mono" weight="bold" style={styles.symbol}>
+              {signal.symbol}
+            </ThemedText>
+            <ThemedText variant="caption" color="secondary" style={styles.name} numberOfLines={1}>
+              {signal.instrumentName}
+            </ThemedText>
+          </View>
+
+          <View style={styles.rightSection}>
+            <View style={[styles.statusBadge, { borderColor: getStatusColor(signal.status) }]}>
+              <ThemedText variant="mono" style={{ color: getStatusColor(signal.status), fontSize: 10 }}>
+                {signal.status.toUpperCase()}
+              </ThemedText>
+            </View>
+          </View>
+        </View>
+
+        {/* Details */}
+        <View style={styles.details}>
+          <View style={styles.row}>
+            <View style={styles.column}>
+              <ThemedText variant="caption" color="secondary">
+                ENTRY
+              </ThemedText>
+              <ThemedText variant="mono" weight="bold">
+                {formatPrice(signal.entryPrice)}
+              </ThemedText>
+            </View>
+
+            <View style={styles.column}>
+              <ThemedText variant="caption" color="secondary">
+                CURRENT
+              </ThemedText>
+              <ThemedText variant="mono" weight="bold" style={{ color: '#0099ff' }}>
+                {formatPrice(signal.currentPrice)}
+              </ThemedText>
+            </View>
+
+            <View style={styles.column}>
+              <ThemedText variant="caption" color="secondary">
+                CONFIDENCE
+              </ThemedText>
+              <ThemedText variant="mono" weight="bold" style={{ color: '#00ff88' }}>
+                {Math.round(signal.confidence * 100)}%
+              </ThemedText>
+              <View style={styles.confidenceContainer}>
+                <View style={styles.confidenceBar}>
+                  <View
+                    style={[
+                      styles.confidenceFill,
+                      { width: `${signal.confidence * 100}%` }
+                    ]}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Prices */}
+        <View style={styles.prices}>
+          <View style={styles.priceRow}>
+            <ThemedText variant="caption" color="secondary">
+              <Ionicons name="shield" size={12} color="#ff4444" />
+              {' STOP'}
+            </ThemedText>
             <ThemedText variant="mono" style={{ color: '#ff4444' }}>
               {formatPrice(signal.stopLoss)}
             </ThemedText>
@@ -62,6 +171,9 @@ const styles = StyleSheet.create({
   card: {
     marginHorizontal: 4,
     marginVertical: 8,
+  },
+  cardContent: {
+    borderLeftWidth: 4,
   },
   header: {
     flexDirection: 'row',

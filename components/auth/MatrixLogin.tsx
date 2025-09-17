@@ -76,24 +76,24 @@ const MatrixLogin: React.FC = () => {
         <div className="matrix-terminal p-8 max-w-2xl w-full">
           <div className="space-y-4 font-mono">
             <TypewriterText
-              text="> NEURAL INTERFACE ACTIVATED"
+              text="{'>'} NEURAL INTERFACE ACTIVATED"
               speed={50}
               className="text-xl"
             />
             <TypewriterText
-              text="> SCANNING FOR CONSCIOUSNESS..."
+              text="{'>'} SCANNING FOR CONSCIOUSNESS..."
               speed={50}
               delay={1000}
               className="text-lg"
             />
             <TypewriterText
-              text="> IDENTITY VERIFICATION REQUIRED"
+              text="{'>'} IDENTITY VERIFICATION REQUIRED"
               speed={50}
               delay={2000}
               className="text-lg"
             />
             <TypewriterText
-              text="> PREPARE TO JACK IN"
+              text="{'>'} PREPARE TO JACK IN"
               speed={50}
               delay={2500}
               className="text-xl text-matrix-bright"
@@ -110,7 +110,7 @@ const MatrixLogin: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-8 space-y-4">
           <TypewriterText
-            text={isLogin ? "> JACK INTO THE MATRIX" : "> CREATE NEURAL LINK"}
+            text={isLogin ? "{'>'} JACK INTO THE MATRIX" : "{'>'} CREATE NEURAL LINK"}
             speed={30}
             className="text-2xl font-bold"
           />
@@ -127,7 +127,7 @@ const MatrixLogin: React.FC = () => {
         {error && (
           <div className="mb-6 p-4 border border-red-500 bg-red-500/10 text-red-400 font-mono text-sm matrix-glitch">
             <TypewriterText
-              text={`> ERROR: ${error}`}
+              text={`{'>'} ERROR: ${error}`}
               speed={20}
             />
           </div>
@@ -221,8 +221,8 @@ const MatrixLogin: React.FC = () => {
           >
             <TypewriterText
               text={isLogin
-                ? "> Need neural link? CREATE_ACCOUNT"
-                : "> Already linked? JACK_IN"
+                ? "{'>'} Need neural link? CREATE_ACCOUNT"
+                : "{'>'} Already linked? JACK_IN"
               }
               speed={20}
               showCursor={false}

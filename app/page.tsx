@@ -2,14 +2,12 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { useMatrix } from '@/contexts/MatrixContext'
 import MatrixLogin from '@/components/auth/MatrixLogin'
 import MatrixDashboard from '@/components/dashboard/MatrixDashboard'
 import TypewriterText from '@/components/ui/TypewriterText'
 
 export default function HomePage() {
   const { isAuthenticated, isLoading } = useAuth()
-  const { isJackedIn } = useMatrix()
   const [showWelcome, setShowWelcome] = useState(true)
 
   useEffect(() => {
@@ -19,6 +17,7 @@ export default function HomePage() {
       }, 3000)
       return () => clearTimeout(timer)
     }
+    return undefined
   }, [isLoading])
 
   if (isLoading) {

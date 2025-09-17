@@ -2,7 +2,7 @@
 
 import { memo, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowUpIcon, ArrowDownIcon, ClockIcon } from '@heroicons/react/24/outline'
+import { ArrowUp, ArrowDown, Clock } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
 interface Signal {
@@ -89,9 +89,9 @@ const SignalCard = memo(function SignalCard({
             </span>
             <div className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${directionColor}`}>
               {signal.direction === 'BUY' ? (
-                <ArrowUpIcon className="w-3 h-3" />
+                <ArrowUp className="w-3 h-3" />
               ) : (
-                <ArrowDownIcon className="w-3 h-3" />
+                <ArrowDown className="w-3 h-3" />
               )}
               {signal.direction}
             </div>
@@ -103,7 +103,7 @@ const SignalCard = memo(function SignalCard({
             {signal.confidence}% confidence
           </div>
           <div className="signal-meta-mobile">
-            <ClockIcon className="w-3 h-3" />
+            <Clock className="w-3 h-3" />
             {timeAgo}
           </div>
         </div>
