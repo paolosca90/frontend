@@ -16,12 +16,16 @@
 }
 
 html, body {
-  font-family: 'Courier Prime', 'Source Code Pro', 'Courier New', Monaco, 'Lucida Console', monospace;
+  font-family: var(--font-jetbrains-mono), var(--font-source-code-pro), 'Courier New', Monaco, 'Lucida Console', monospace;
   background-color: var(--matrix-black);
   color: var(--matrix-green);
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  font-feature-settings: 'liga' 1, 'calt' 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Matrix Theme Classes */
@@ -72,7 +76,7 @@ html, body {
 .matrix-column {
   position: absolute;
   top: -100vh;
-  font-family: 'Courier Prime', monospace;
+  font-family: var(--font-jetbrains-mono), var(--font-source-code-pro), monospace;
   font-size: 14px;
   line-height: 14px;
   text-shadow: 0 0 5px #00ff88;
@@ -394,26 +398,148 @@ html, body {
   background: var(--matrix-bright-green);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .matrix-column {
-    font-size: 12px;
-    line-height: 12px;
-  }
+/* Mobile-First Responsive Design */
 
-  .typewriter {
-    animation-duration: 3s;
-  }
-}
-
-@media (max-width: 480px) {
+/* Mobile Base (320px+) */
+@media (min-width: 320px) {
   .matrix-column {
     font-size: 10px;
     line-height: 10px;
   }
 
-  body {
+  .typewriter {
+    animation-duration: 2.5s;
+  }
+
+  /* Touch-optimized buttons */
+  .touch-button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px 24px;
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+
+  /* Mobile typography */
+  .text-responsive-sm { font-size: 0.875rem; line-height: 1.25rem; }
+  .text-responsive-base { font-size: 1rem; line-height: 1.5rem; }
+  .text-responsive-lg { font-size: 1.125rem; line-height: 1.75rem; }
+  .text-responsive-xl { font-size: 1.25rem; line-height: 1.75rem; }
+  .text-responsive-2xl { font-size: 1.5rem; line-height: 2rem; }
+  .text-responsive-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+}
+
+/* Small Mobile (375px+) */
+@media (min-width: 375px) {
+  .matrix-column {
+    font-size: 11px;
+    line-height: 11px;
+  }
+
+  .text-responsive-2xl { font-size: 1.625rem; line-height: 2rem; }
+  .text-responsive-3xl { font-size: 2rem; line-height: 2.375rem; }
+}
+
+/* Large Mobile (425px+) */
+@media (min-width: 425px) {
+  .matrix-column {
+    font-size: 12px;
+    line-height: 12px;
+  }
+
+  .text-responsive-3xl { font-size: 2.25rem; line-height: 2.5rem; }
+}
+
+/* Tablet Portrait (768px+) */
+@media (min-width: 768px) {
+  .matrix-column {
+    font-size: 13px;
+    line-height: 13px;
+  }
+
+  .typewriter {
+    animation-duration: 3s;
+  }
+
+  /* Tablet typography */
+  .text-responsive-lg { font-size: 1.25rem; line-height: 1.75rem; }
+  .text-responsive-xl { font-size: 1.5rem; line-height: 2rem; }
+  .text-responsive-2xl { font-size: 1.875rem; line-height: 2.25rem; }
+  .text-responsive-3xl { font-size: 3rem; line-height: 1; }
+
+  /* Desktop button styles */
+  .touch-button {
+    min-height: 40px;
+    padding: 10px 20px;
     font-size: 14px;
+  }
+}
+
+/* Tablet Landscape / Small Desktop (1024px+) */
+@media (min-width: 1024px) {
+  .matrix-column {
+    font-size: 14px;
+    line-height: 14px;
+  }
+
+  .text-responsive-2xl { font-size: 2.25rem; line-height: 2.5rem; }
+  .text-responsive-3xl { font-size: 3.75rem; line-height: 1; }
+}
+
+/* Desktop (1280px+) */
+@media (min-width: 1280px) {
+  .matrix-column {
+    font-size: 15px;
+    line-height: 15px;
+  }
+
+  .text-responsive-3xl { font-size: 4.5rem; line-height: 1; }
+}
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+  .matrix-column {
+    font-size: 16px;
+    line-height: 16px;
+  }
+
+  .text-responsive-3xl { font-size: 5rem; line-height: 1; }
+}
+
+/* Ultra-wide (1920px+) */
+@media (min-width: 1920px) {
+  .matrix-column {
+    font-size: 18px;
+    line-height: 18px;
+  }
+
+  .text-responsive-3xl { font-size: 6rem; line-height: 1; }
+}
+
+/* Print Styles */
+@media print {
+  .matrix-rain,
+  .matrix-column {
+    display: none;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  .matrix-column,
+  .typewriter,
+  .matrix-glitch,
+  .matrix-loading::after {
+    animation: none;
+  }
+
+  .matrix-button::before {
+    transition: none;
   }
 }
 
@@ -439,18 +565,274 @@ html, body {
   box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
 }
 
-/* Animation utilities */
+/* Enhanced Mobile-First Utilities */
+
+/* Touch and Mobile Interaction */
+.touch-feedback {
+  transition: all 0.15s ease;
+  transform: scale(1);
+}
+
+.touch-feedback:active {
+  transform: scale(0.98);
+  filter: brightness(1.1);
+}
+
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--matrix-green);
+  z-index: 50;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 8px;
+}
+
+@media (min-width: 768px) {
+  .mobile-nav {
+    display: none;
+  }
+}
+
+/* Responsive Grid System */
+.grid-responsive-1 { grid-template-columns: repeat(1, 1fr); }
+.grid-responsive-2 { grid-template-columns: repeat(1, 1fr); }
+.grid-responsive-3 { grid-template-columns: repeat(1, 1fr); }
+.grid-responsive-4 { grid-template-columns: repeat(1, 1fr); }
+
+@media (min-width: 640px) {
+  .grid-responsive-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-responsive-3 { grid-template-columns: repeat(2, 1fr); }
+  .grid-responsive-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 768px) {
+  .grid-responsive-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-responsive-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Responsive Spacing */
+.spacing-responsive {
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .spacing-responsive {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .spacing-responsive {
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .spacing-responsive {
+    padding: 3rem;
+  }
+}
+
+/* Enhanced Matrix Animations */
 .animate-pulse-matrix {
   animation: pulse-matrix 2s infinite;
+}
+
+.animate-matrix-glow {
+  animation: matrix-glow 3s ease-in-out infinite alternate;
+}
+
+.animate-matrix-float {
+  animation: matrix-float 6s ease-in-out infinite;
 }
 
 @keyframes pulse-matrix {
   0%, 100% {
     opacity: 1;
     text-shadow: 0 0 5px var(--matrix-green);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.7;
     text-shadow: 0 0 20px var(--matrix-green);
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
   }
+}
+
+@keyframes matrix-glow {
+  0% {
+    text-shadow: 0 0 5px var(--matrix-green);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  }
+  100% {
+    text-shadow: 0 0 15px var(--matrix-green), 0 0 25px var(--matrix-green);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+  }
+}
+
+@keyframes matrix-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Enhanced Professional Components */
+.matrix-glass {
+  background: rgba(0, 255, 136, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  box-shadow:
+    0 0 20px rgba(0, 255, 136, 0.1),
+    inset 0 0 20px rgba(0, 255, 136, 0.05);
+}
+
+.matrix-gradient-bg {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 136, 0.1) 0%,
+    rgba(0, 255, 136, 0.05) 25%,
+    transparent 50%,
+    rgba(0, 255, 136, 0.05) 75%,
+    rgba(0, 255, 136, 0.1) 100%
+  );
+}
+
+.matrix-border-animated {
+  position: relative;
+  overflow: hidden;
+}
+
+.matrix-border-animated::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--matrix-green),
+    transparent
+  );
+  animation: matrix-border-sweep 3s infinite;
+}
+
+@keyframes matrix-border-sweep {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Status Indicators */
+.status-online {
+  color: var(--matrix-green);
+  text-shadow: 0 0 5px var(--matrix-green);
+}
+
+.status-offline {
+  color: #666;
+}
+
+.status-warning {
+  color: #ffaa00;
+  text-shadow: 0 0 5px #ffaa00;
+}
+
+.status-error {
+  color: #ff4444;
+  text-shadow: 0 0 5px #ff4444;
+}
+
+/* Enhanced Form Elements */
+.matrix-form-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.matrix-form-group label {
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  background: var(--matrix-black);
+  padding: 0 8px;
+  font-size: 0.75rem;
+  color: var(--matrix-green);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.matrix-select {
+  background: rgba(0, 255, 136, 0.05);
+  border: 1px solid var(--matrix-green);
+  color: var(--matrix-green);
+  font-family: inherit;
+  outline: none;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2300ff88' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 8px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 32px;
+}
+
+.matrix-select:focus {
+  background: rgba(0, 255, 136, 0.1);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+/* Professional Data Display */
+.data-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--matrix-green);
+  border: 1px solid var(--matrix-green);
+}
+
+.data-grid-header {
+  background: rgba(0, 255, 136, 0.2);
+  padding: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+.data-grid-cell {
+  background: var(--matrix-black);
+  padding: 12px;
+  font-family: var(--font-jetbrains-mono), monospace;
+}
+
+/* Enhanced Performance Classes */
+.will-change-transform {
+  will-change: transform;
+}
+
+.gpu-optimized {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }

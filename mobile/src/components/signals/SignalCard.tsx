@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemedText } from '../ui/ThemedText';
 import { ThemedCard } from '../ui/ThemedCard';
-import { TradingSignal } from '../../types/TradingSignal';
+import type { TradingSignal } from '@/types/api';
 import { formatPrice, getTimeUntilExpiry } from '../../utils/formatters';
 
 interface SignalCardProps {

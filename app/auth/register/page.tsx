@@ -1,266 +1,277 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-// import { motion } from 'framer-motion'
-// Temporary motion replacement for build fix
-const motion = {
-  div: (props: any) => <div {...props} style={{ ...props.style, opacity: 1 }} />
-}
-import { Eye, EyeOff, Brain, Zap, ArrowLeft, User, Mail, Lock } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useAuthStore } from '@/lib/store/auth'
-import { toast } from 'react-hot-toast'
+import React, { useState } from 'react'
+import MatrixRain from '../../components/matrix/MatrixRain'
+import MatrixButton from '../../components/ui/MatrixButton'
 
 export default function RegisterPage() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
+  const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [agreedToTerms, setAgreedToTerms] = useState(false)
 
-  const { register, isLoading: authLoading, error } = useAuthStore()
-  const router = useRouter()
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-
-    if (password !== confirmPassword) {
-      toast.error('Security keys do not match')
-      setIsLoading(false)
-      return
-    }
-
-    if (password.length < 8) {
-      toast.error('Security key must be at least 8 characters')
-      setIsLoading(false)
-      return
-    }
-
-    try {
-      await register(email, password, name)
-      toast.success('Neural interface activated! Welcome to the Matrix.')
-      router.push('/dashboard')
-    } catch (error: any) {
-      toast.error(error.message || 'System access denied. Try again.')
-    } finally {
-      setIsLoading(false)
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match')
+      return
+    }
+
+    setIsLoading(true)
+
+    // Simulate registration process
+    setTimeout(() => {
+      setIsLoading(false)
+      // Add actual registration logic here
+      console.log('Registration attempt:', formData)
+    }, 2000)
+  }
+
+  const isFormValid = formData.name && formData.email && formData.password &&
+                     formData.confirmPassword && agreedToTerms &&
+                     formData.password === formData.confirmPassword
+
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center p-4">
-      {/* Matrix Background Effect */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="h-full w-full bg-matrix-500">
-          <div className="grid grid-cols-20 h-full animate-matrix-rain">
-            {Array.from({ length: 100 }, (_, i) => (
-              <div key={i} className="text-matrix-500 text-xs">
-                {Math.random() > 0.5 ? '1' : '0'}
+    <div className="min-h-screen relative bg-black text-matrix-green">
+      {/* Matrix Rain Background */}
+      <MatrixRain className="absolute inset-0" density={0.2} speed={0.5} />
+
+      {/* Back Navigation */}
+      <div className="absolute top-4 left-4 z-20">
+        <MatrixButton
+          variant="ghost"
+          size="sm"
+          onClick={() => window.location.href = '/'}
+          icon={<span>←</span>}
+          iconPosition="left"
+        >
+          HOME
+        </MatrixButton>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center spacing-responsive">
+        <div className="w-full max-w-md mx-auto">
+          {/* Registration Card */}
+          <div className="matrix-glass matrix-border-animated p-8 lg:p-10">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-responsive-2xl font-matrix font-bold text-matrix-green mb-2 animate-matrix-glow">
+                JOIN MATRIX
+              </h1>
+              <p className="text-responsive-base font-matrix text-matrix-green/80">
+                Begin Your Digital Evolution
+              </p>
+              <div className="w-16 h-0.5 bg-matrix-green mx-auto mt-4 animate-pulse-matrix" />
+            </div>
+
+            {/* Registration Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Name Field */}
+              <div className="matrix-form-group">
+                <label htmlFor="name" className="font-matrix">
+                  AGENT_NAME
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="matrix-input w-full px-4 py-3 text-responsive-base font-matrix"
+                  placeholder="Thomas Anderson"
+                  autoComplete="name"
+                />
               </div>
-            ))}
+
+              {/* Email Field */}
+              <div className="matrix-form-group">
+                <label htmlFor="email" className="font-matrix">
+                  EMAIL_ADDRESS
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="matrix-input w-full px-4 py-3 text-responsive-base font-matrix"
+                  placeholder="neo@matrix.com"
+                  autoComplete="email"
+                />
+              </div>
+
+              {/* Password Field */}
+              <div className="matrix-form-group">
+                <label htmlFor="password" className="font-matrix">
+                  ACCESS_KEY
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="matrix-input w-full px-4 py-3 pr-12 text-responsive-base font-matrix"
+                    placeholder="••••••••••••••••"
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-matrix-green/60 hover:text-matrix-green transition-colors"
+                  >
+                    {showPassword ? '👁️' : '👁️‍🗨️'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm Password Field */}
+              <div className="matrix-form-group">
+                <label htmlFor="confirmPassword" className="font-matrix">
+                  VERIFY_ACCESS_KEY
+                </label>
+                <div className="relative">
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    required
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className={`matrix-input w-full px-4 py-3 pr-12 text-responsive-base font-matrix ${
+                      formData.confirmPassword && formData.password !== formData.confirmPassword
+                        ? 'border-red-500'
+                        : ''
+                    }`}
+                    placeholder="••••••••••••••••"
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-matrix-green/60 hover:text-matrix-green transition-colors"
+                  >
+                    {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
+                  </button>
+                </div>
+                {formData.confirmPassword && formData.password !== formData.confirmPassword && (
+                  <p className="text-red-400 text-xs font-matrix mt-1">ACCESS_KEYS_DO_NOT_MATCH</p>
+                )}
+              </div>
+
+              {/* Terms and Conditions */}
+              <div className="flex items-start space-x-3">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  checked={agreedToTerms}
+                  onChange={(e) => setAgreedToTerms(e.target.checked)}
+                  className="mt-1 w-4 h-4 text-matrix-green bg-transparent border-matrix-green rounded focus:ring-matrix-green focus:ring-2"
+                />
+                <label htmlFor="terms" className="text-sm font-matrix text-matrix-green/80 cursor-pointer">
+                  I agree to the{' '}
+                  <a href="/terms" className="text-matrix-bright-green hover:text-matrix-green transition-colors">
+                    MATRIX_PROTOCOLS
+                  </a>{' '}
+                  and{' '}
+                  <a href="/privacy" className="text-matrix-bright-green hover:text-matrix-green transition-colors">
+                    PRIVACY_CONSTRAINTS
+                  </a>
+                </label>
+              </div>
+
+              {/* Submit Button */}
+              <MatrixButton
+                type="submit"
+                variant="primary"
+                size="lg"
+                fullWidth
+                loading={isLoading}
+                disabled={!isFormValid}
+                className="mt-8"
+              >
+                {isLoading ? 'INITIALIZING_AGENT...' : 'JOIN_REVOLUTION'}
+              </MatrixButton>
+            </form>
+
+            {/* Divider */}
+            <div className="relative my-8">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-matrix-green/30" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-black text-matrix-green/60 font-matrix">OR_CONNECT_VIA</span>
+              </div>
+            </div>
+
+            {/* Social Registration */}
+            <div className="space-y-4">
+              <MatrixButton
+                variant="secondary"
+                size="md"
+                fullWidth
+                icon={<span>🔑</span>}
+                iconPosition="left"
+              >
+                GOOGLE_OAUTH
+              </MatrixButton>
+            </div>
+
+            {/* Links */}
+            <div className="text-center mt-8 space-y-4">
+              <p className="font-matrix text-matrix-green/80">
+                ALREADY_IN_MATRIX?{' '}
+                <a
+                  href="/auth/login"
+                  className="text-matrix-bright-green hover:text-matrix-green transition-colors font-bold"
+                >
+                  ACCESS_TERMINAL
+                </a>
+              </p>
+            </div>
+          </div>
+
+          {/* System Status */}
+          <div className="text-center mt-6 text-xs font-matrix text-matrix-green/60 space-y-1">
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-2 h-2 bg-matrix-green rounded-full animate-pulse-matrix" />
+              <span>REGISTRATION: ACTIVE</span>
+            </div>
+            <div>NEW_AGENTS: WELCOME</div>
+            <div>SECURITY: QUANTUM_ENCRYPTED</div>
           </div>
         </div>
       </div>
 
-      {/* Back Button */}
-      <div className="absolute top-4 left-4 z-20">
-        <Button variant="matrix-outline" size="sm" asChild>
-          <Link href="/">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Exit
-          </Link>
-        </Button>
-      </div>
-
-      {/* Register Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-md relative z-10"
-      >
-        <Card className="bg-matrix-dark-200/90 border-matrix-500/30 backdrop-blur-sm">
-          <CardHeader className="text-center pb-8">
-            <div className="w-16 h-16 bg-matrix-500/20 border border-matrix-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Brain className="w-8 h-8 text-matrix-500" />
-            </div>
-            <CardTitle className="text-2xl font-bold text-white mb-2">
-              REQUEST <span className="text-matrix-500 font-mono">ACCESS</span>
-            </CardTitle>
-            <p className="text-gray-400 text-sm">
-              Initialize your neural interface to the trading matrix
-            </p>
-          </CardHeader>
-
-          <CardContent>
-            <form onSubmit={handleRegister} className="space-y-6">
-              {error && (
-                <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-400 text-sm">
-                  {error}
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-matrix-500 font-mono text-sm">
-                  USER_IDENTITY
-                </Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <Input
-                    id="name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500 pl-10"
-                    placeholder="Enter your name"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-matrix-500 font-mono text-sm">
-                  NEURAL_ADDRESS
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500 pl-10"
-                    placeholder="your.email@domain.com"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-matrix-500 font-mono text-sm">
-                  SECURITY_KEY
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500 pl-10 pr-12"
-                    placeholder="••••••••••••"
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-matrix-500"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-matrix-500 font-mono text-sm">
-                  VERIFY_KEY
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500 pl-10 pr-12"
-                    placeholder="••••••••••••"
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-matrix-500"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                variant="matrix"
-                size="lg"
-                className="w-full"
-                disabled={isLoading || authLoading}
-              >
-                {isLoading || authLoading ? (
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 animate-pulse" />
-                    INITIALIZING INTERFACE...
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4" />
-                    ACTIVATE NEURAL LINK
-                  </div>
-                )}
-              </Button>
-
-              <div className="text-center text-xs text-gray-400">
-                By activating your neural interface, you agree to the{' '}
-                <Link href="/terms" className="text-matrix-500 hover:text-matrix-400 font-mono">
-                  SYSTEM_PROTOCOLS
-                </Link>{' '}
-                and{' '}
-                <Link href="/privacy" className="text-matrix-500 hover:text-matrix-400 font-mono">
-                  DATA_ENCRYPTION_POLICY
-                </Link>
-              </div>
-            </form>
-
-            <div className="mt-8 pt-6 border-t border-matrix-500/20">
-              <div className="text-center space-y-4">
-                <p className="text-gray-400 text-sm">
-                  Already connected to the Matrix?
-                </p>
-                <Button variant="matrix-outline" size="lg" className="w-full" asChild>
-                  <Link href="/auth/login">
-                    <Brain className="w-4 h-4 mr-2" />
-                    ACCESS_EXISTING_LINK
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Matrix-style footer */}
-        <div className="text-center mt-6">
-          <p className="text-gray-500 text-xs font-mono">
-            &gt; NEURAL_INTERFACE_PROTOCOL_v3.2_
-          </p>
+      {/* Mobile Navigation */}
+      <div className="mobile-nav lg:hidden">
+        <div className="flex items-center justify-center w-full">
+          <MatrixButton
+            variant="ghost"
+            size="sm"
+            onClick={() => window.location.href = '/auth/login'}
+            className="mx-4"
+          >
+            ALREADY MEMBER
+          </MatrixButton>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }

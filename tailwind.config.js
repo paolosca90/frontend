@@ -148,7 +148,32 @@ module.exports = {
         'matrix-slide-in': 'matrix-slide-in 0.3s ease-out'
       },
       fontFamily: {
-        'mono': ['Courier Prime', 'Source Code Pro', 'Courier New', 'Monaco', 'Lucida Console', 'monospace'],
+        'sans': ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        'mono': ['var(--font-jetbrains-mono)', 'var(--font-source-code-pro)', 'Courier New', 'Monaco', 'Lucida Console', 'monospace'],
+        'matrix': ['var(--font-jetbrains-mono)', 'var(--font-source-code-pro)', 'monospace'],
+      },
+      screens: {
+        'xs': '320px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+        '3xl': '1920px',
+        // Custom breakpoints for trading interface
+        'mobile-sm': '375px',
+        'mobile-lg': '425px',
+        'tablet': '768px',
+        'desktop': '1024px',
+        'desktop-lg': '1440px',
+        'ultrawide': '1920px',
+        // Height-based breakpoints for mobile
+        'h-sm': { 'raw': '(min-height: 600px)' },
+        'h-md': { 'raw': '(min-height: 700px)' },
+        'h-lg': { 'raw': '(min-height: 800px)' },
+        // Touch device detection
+        'touch': { 'raw': '(hover: none) and (pointer: coarse)' },
+        'no-touch': { 'raw': '(hover: hover) and (pointer: fine)' },
       },
       boxShadow: {
         'matrix': '0 0 15px rgba(0, 255, 136, 0.3)',

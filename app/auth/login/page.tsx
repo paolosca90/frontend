@@ -1,196 +1,201 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-// import { motion } from 'framer-motion'
-// Temporary motion replacement for build fix
-const motion = {
-  div: (props: any) => <div {...props} style={{ ...props.style, opacity: 1 }} />
-}
-import { Eye, EyeOff, Brain, Zap, ArrowLeft } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { useAuthStore } from '@/lib/store/auth'
-import { toast } from 'react-hot-toast'
+import React, { useState } from 'react'
+import MatrixRain from '../../components/matrix/MatrixRain'
+import MatrixButton from '../../components/ui/MatrixButton'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
-  const { login, isLoading: authLoading, error } = useAuthStore()
-  const router = useRouter()
-
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    try {
-      await login(email, password)
-      toast.success('Neural link established successfully!')
-      router.push('/dashboard')
-    } catch (error: any) {
-      toast.error(error.message || 'Access denied. Check your credentials.')
-    } finally {
+    // Simulate login process
+    setTimeout(() => {
       setIsLoading(false)
-    }
+      // Add actual login logic here
+      console.log('Login attempt:', { email, password })
+    }, 2000)
   }
 
   return (
-    <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center p-4">
-      {/* Matrix Background Effect */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="h-full w-full bg-matrix-500">
-          <div className="grid grid-cols-20 h-full animate-matrix-rain">
-            {Array.from({ length: 100 }, (_, i) => (
-              <div key={i} className="text-matrix-500 text-xs">
-                {Math.random() > 0.5 ? '1' : '0'}
+    <div className="min-h-screen relative bg-black text-matrix-green">
+      {/* Matrix Rain Background - Lighter density for focus */}
+      <MatrixRain className="absolute inset-0" density={0.2} speed={0.5} />
+
+      {/* Back Navigation */}
+      <div className="absolute top-4 left-4 z-20">
+        <MatrixButton
+          variant="ghost"
+          size="sm"
+          onClick={() => window.location.href = '/'}
+          icon={<span>←</span>}
+          iconPosition="left"
+        >
+          HOME
+        </MatrixButton>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex items-center justify-center spacing-responsive">
+        <div className="w-full max-w-md mx-auto">
+          {/* Login Card */}
+          <div className="matrix-glass matrix-border-animated p-8 lg:p-10">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-responsive-2xl font-matrix font-bold text-matrix-green mb-2 animate-matrix-glow">
+                MATRIX LOGIN
+              </h1>
+              <p className="text-responsive-base font-matrix text-matrix-green/80">
+                Enter the Digital Realm
+              </p>
+              <div className="w-16 h-0.5 bg-matrix-green mx-auto mt-4 animate-pulse-matrix" />
+            </div>
+
+            {/* Login Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Email Field */}
+              <div className="matrix-form-group">
+                <label htmlFor="email" className="font-matrix">
+                  EMAIL_ADDRESS
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="matrix-input w-full px-4 py-3 text-responsive-base font-matrix"
+                  placeholder="neo@matrix.com"
+                  autoComplete="email"
+                />
               </div>
-            ))}
+
+              {/* Password Field */}
+              <div className="matrix-form-group">
+                <label htmlFor="password" className="font-matrix">
+                  PASSWORD_KEY
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="matrix-input w-full px-4 py-3 pr-12 text-responsive-base font-matrix"
+                    placeholder="••••••••••••••••"
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-matrix-green/60 hover:text-matrix-green transition-colors"
+                  >
+                    {showPassword ? '👁️' : '👁️‍🗨️'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Remember Me */}
+              <div className="flex items-center justify-between">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="matrix-checkbox w-4 h-4 text-matrix-green bg-transparent border-matrix-green rounded focus:ring-matrix-green focus:ring-2"
+                  />
+                  <span className="text-sm font-matrix text-matrix-green/80">REMEMBER_SESSION</span>
+                </label>
+                <a
+                  href="/auth/forgot-password"
+                  className="text-sm font-matrix text-matrix-green/60 hover:text-matrix-green transition-colors"
+                >
+                  FORGOT_PASSWORD?
+                </a>
+              </div>
+
+              {/* Submit Button */}
+              <MatrixButton
+                type="submit"
+                variant="primary"
+                size="lg"
+                fullWidth
+                loading={isLoading}
+                disabled={!email || !password}
+                className="mt-8"
+              >
+                {isLoading ? 'ACCESSING_MATRIX...' : 'ENTER_MATRIX'}
+              </MatrixButton>
+            </form>
+
+            {/* Divider */}
+            <div className="relative my-8">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-matrix-green/30" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-black text-matrix-green/60 font-matrix">OR_CONNECT_VIA</span>
+              </div>
+            </div>
+
+            {/* Social Login */}
+            <div className="space-y-4">
+              <MatrixButton
+                variant="secondary"
+                size="md"
+                fullWidth
+                icon={<span>🔑</span>}
+                iconPosition="left"
+              >
+                GOOGLE_OAUTH
+              </MatrixButton>
+            </div>
+
+            {/* Links */}
+            <div className="text-center mt-8 space-y-4">
+              <p className="font-matrix text-matrix-green/80">
+                NEW_TO_MATRIX?{' '}
+                <a
+                  href="/auth/register"
+                  className="text-matrix-bright-green hover:text-matrix-green transition-colors font-bold"
+                >
+                  CREATE_ACCOUNT
+                </a>
+              </p>
+            </div>
+          </div>
+
+          {/* System Status */}
+          <div className="text-center mt-6 text-xs font-matrix text-matrix-green/60 space-y-1">
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-2 h-2 bg-matrix-green rounded-full animate-pulse-matrix" />
+              <span>AUTH_SYSTEM: ONLINE</span>
+            </div>
+            <div>SECURITY_LEVEL: MAXIMUM</div>
+            <div>ENCRYPTION: 256-BIT</div>
           </div>
         </div>
       </div>
 
-      {/* Back Button */}
-      <div className="absolute top-4 left-4 z-20">
-        <Button variant="matrix-outline" size="sm" asChild>
-          <Link href="/">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Exit
-          </Link>
-        </Button>
-      </div>
-
-      {/* Login Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-md relative z-10"
-      >
-        <Card className="bg-matrix-dark-200/90 border-matrix-500/30 backdrop-blur-sm">
-          <CardHeader className="text-center pb-8">
-            <div className="w-16 h-16 bg-matrix-500/20 border border-matrix-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Brain className="w-8 h-8 text-matrix-500" />
-            </div>
-            <CardTitle className="text-2xl font-bold text-white mb-2">
-              ACCESS <span className="text-matrix-500 font-mono">MATRIX</span>
-            </CardTitle>
-            <p className="text-gray-400 text-sm">
-              Enter your credentials to establish neural link
-            </p>
-          </CardHeader>
-
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-6">
-              {error && (
-                <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-400 text-sm">
-                  {error}
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-matrix-500 font-mono text-sm">
-                  EMAIL_ADDRESS
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500"
-                  placeholder="your.email@domain.com"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-matrix-500 font-mono text-sm">
-                  SECURE_KEY
-                </Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="bg-matrix-dark-300 border-matrix-500/30 text-white placeholder:text-gray-500 focus:border-matrix-500 focus:ring-matrix-500 pr-12"
-                    placeholder="••••••••••••"
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-matrix-500"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                variant="matrix"
-                size="lg"
-                className="w-full"
-                disabled={isLoading || authLoading}
-              >
-                {isLoading || authLoading ? (
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 animate-pulse" />
-                    ESTABLISHING CONNECTION...
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4" />
-                    JACK IN
-                  </div>
-                )}
-              </Button>
-
-              <div className="text-center">
-                <Link
-                  href="/auth/forgot-password"
-                  className="text-sm text-matrix-500 hover:text-matrix-400 font-mono"
-                >
-                  FORGOT_ACCESS_KEY?
-                </Link>
-              </div>
-            </form>
-
-            <div className="mt-8 pt-6 border-t border-matrix-500/20">
-              <div className="text-center space-y-4">
-                <p className="text-gray-400 text-sm">
-                  Need system access?
-                </p>
-                <Button variant="matrix-outline" size="lg" className="w-full" asChild>
-                  <Link href="/auth/register">
-                    <Brain className="w-4 h-4 mr-2" />
-                    REQUEST_ACCESS
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Matrix-style footer */}
-        <div className="text-center mt-6">
-          <p className="text-gray-500 text-xs font-mono">
-            &gt; SECURE_CONNECTION_PROTOCOL_v2.1_
-          </p>
+      {/* Mobile Navigation */}
+      <div className="mobile-nav lg:hidden">
+        <div className="flex items-center justify-center w-full">
+          <MatrixButton
+            variant="ghost"
+            size="sm"
+            onClick={() => window.location.href = '/auth/register'}
+            className="mx-4"
+          >
+            CREATE ACCOUNT
+          </MatrixButton>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }

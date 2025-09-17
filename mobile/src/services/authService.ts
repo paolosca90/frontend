@@ -1,9 +1,12 @@
 import axios from 'axios';
 
+// Type-safe environment variable access
+const isDevelopment = process.env['NODE_ENV'] === 'development';
+
 // API base URL - configure based on environment
-const API_BASE_URL = __DEV__
-  ? 'http://localhost:3000/api'
-  : 'https://api.ai-cash-revolution.com/api';
+const API_BASE_URL = isDevelopment
+  ? process.env['NEXT_PUBLIC_API_URL_DEV'] || 'http://localhost:3000/api'
+  : process.env['NEXT_PUBLIC_API_URL'] || 'https://api.ai-cash-revolution.com/api';
 
 // Create axios instance with default configuration
 const apiClient = axios.create({
@@ -123,7 +126,7 @@ export const authService = {
   },
 
   // User logout
-  async logout(token?: string) {
+  async logout(_token?: string) {
     return apiClient.post('/auth/logout');
   },
 
@@ -143,7 +146,7 @@ export const authService = {
   },
 
   // Validate current token
-  async validateToken(token: string): Promise<boolean> {
+  async validateToken(_token: string): Promise<boolean> {
     try {
       await apiClient.get('/auth/validate');
       return true;
@@ -153,7 +156,7 @@ export const authService = {
   },
 
   // Update user profile
-  async updateProfile(token: string, userData: any) {
+  async updateProfile(_token: string, userData: any) {
     return apiClient.put('/auth/profile', userData);
   },
 

@@ -1,9 +1,12 @@
 import axios from 'axios';
 
+// Type-safe environment variable access
+const isDevelopment = process.env['NODE_ENV'] === 'development';
+
 // API base URL - configure based on environment
-const API_BASE_URL = __DEV__
-  ? 'http://localhost:3000/api'
-  : 'https://api.ai-cash-revolution.com/api';
+const API_BASE_URL = isDevelopment
+  ? process.env['NEXT_PUBLIC_API_URL_DEV'] || 'http://localhost:3000/api'
+  : process.env['NEXT_PUBLIC_API_URL'] || 'https://api.ai-cash-revolution.com/api';
 
 // Create axios instance for instruments API
 const instrumentApiClient = axios.create({
@@ -75,17 +78,17 @@ export const instrumentService = {
 export const instrumentUtils = {
   // Get instrument display symbol (with type indicator)
   formatInstrumentSymbol: (symbol: string, type: string): string => {
-    const typeIndicators: { [key: string]: string } = {
+    const typeIndicators: Record<string, string> = {
       forex: '💱',
       commodity: '🏗️',
       index: '📈',
     };
-    return `${typeIndicators[type] || '📊'} ${symbol}`;
+    return `${typeIndicators[type as keyof typeof typeIndicators] || '📊'} ${symbol}`;
   },
 
   // Get category display name
   formatCategoryName: (category: string): string => {
-    const categoryNames: { [key: string]: string } = {
+    const categoryNames: Record<string, string> = {
       major: 'MAGGIORE',
       minor: 'MINORE',
       exotic: 'ESOTICO',
@@ -93,7 +96,7 @@ export const instrumentUtils = {
       metals: 'METALLI',
       indices: 'INDICI',
     };
-    return categoryNames[category] || category.toUpperCase();
+    return categoryNames[category as keyof typeof categoryNames] || category.toUpperCase();
   },
 
   // Check if instrument is supported for signals
@@ -138,12 +141,12 @@ export const instrumentUtils = {
   },
 
   // Group instruments by type
-  groupInstrumentsByType: (instruments: any[]): { [key: string]: any[] } => {
-    return instruments.reduce((groups, instrument) => {
+  groupInstrumentsByType: (instruments: any[]): Record<string, any[]> => {
+    return instruments.reduce((groups: Record<string, any[]>, instrument) => {
       if (!groups[instrument.type]) {
         groups[instrument.type] = [];
       }
-      groups[instrument.type].push(instrument);
+      groups[instrument.type]?.push(instrument);
       return groups;
     }, {});
   },
@@ -151,16 +154,16 @@ export const instrumentUtils = {
   // Sort instruments by popularity/relevance
   sortInstrumentsByRelevance: (instruments: any[]): any[] => {
     // Order: Major forex first, then commodities, then indices
-    const typeOrder = { forex: 1, commodity: 2, index: 3 };
-    const categoryOrder = { major: 1, minor: 2, exotic: 3, metals: 1, energy: 1, indices: 1 };
+    const typeOrder: Record<string, number> = { forex: 1, commodity: 2, index: 3 };
+    const categoryOrder: Record<string, number> = { major: 1, minor: 2, exotic: 3, metals: 1, energy: 1, indices: 1 };
 
     return instruments.sort((a, b) => {
       // First by type
-      const typeComparison = typeOrder[a.type] - typeOrder[b.type];
+      const typeComparison = (typeOrder[a.type as keyof typeof typeOrder] || 999) - (typeOrder[b.type as keyof typeof typeOrder] || 999);
       if (typeComparison !== 0) return typeComparison;
 
       // Then by category popularity
-      const categoryComparison = categoryOrder[a.category] - categoryOrder[b.category];
+      const categoryComparison = (categoryOrder[a.category as keyof typeof categoryOrder] || 999) - (categoryOrder[b.category as keyof typeof categoryOrder] || 999);
       if (categoryComparison !== 0) return categoryComparison;
 
       // Then alphabetically

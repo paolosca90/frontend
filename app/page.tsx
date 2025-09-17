@@ -1,137 +1,144 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
-import MatrixLogin from '@/components/auth/MatrixLogin'
-import MatrixDashboard from '@/components/dashboard/MatrixDashboard'
-import TypewriterText from '@/components/ui/TypewriterText'
+import React from 'react'
+import MatrixRain from '../components/matrix/MatrixRain'
+import MatrixButton from '../components/ui/MatrixButton'
 
 export default function HomePage() {
-  const { isAuthenticated, isLoading } = useAuth()
-  const [showWelcome, setShowWelcome] = useState(true)
+  return (
+    <div className="min-h-screen relative bg-black text-matrix-green">
+      {/* Matrix Rain Background */}
+      <MatrixRain className="absolute inset-0" density={0.3} speed={0.8} />
 
-  useEffect(() => {
-    if (!isLoading) {
-      const timer = setTimeout(() => {
-        setShowWelcome(false)
-      }, 3000)
-      return () => clearTimeout(timer)
-    }
-    return undefined
-  }, [isLoading])
+      {/* Main Content */}
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Hero Section */}
+        <main className="flex-1 flex items-center justify-center spacing-responsive">
+          <div className="text-center max-w-6xl mx-auto">
+            {/* Title with Enhanced Matrix Effects */}
+            <div className="space-y-4 mb-8 lg:mb-12">
+              <h1 className="text-responsive-3xl font-matrix font-bold text-matrix-green animate-matrix-glow">
+                <span className="block">AI CASH</span>
+                <span className="block text-matrix-bright-green">REVOLUTION</span>
+              </h1>
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-matrix-green">
-        <div className="matrix-terminal p-8 max-w-2xl w-full mx-4">
-          <div className="space-y-4">
-            <TypewriterText
-              text="INITIALIZING NEURAL INTERFACE..."
-              speed={50}
-              className="text-xl font-mono"
-            />
-            <div className="matrix-loading h-8 w-full"></div>
-            <TypewriterText
-              text="ESTABLISHING SECURE CONNECTION..."
-              speed={50}
-              delay={1000}
-              className="text-lg font-mono"
-            />
-            <TypewriterText
-              text="LOADING MATRIX PROTOCOLS..."
-              speed={50}
-              delay={2000}
-              className="text-lg font-mono"
-            />
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (showWelcome && !isAuthenticated) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-matrix-green px-4">
-        <div className="text-center space-y-8 max-w-4xl">
-          {/* Matrix Logo/Title */}
-          <div className="space-y-4">
-            <h1 className="text-6xl md:text-8xl font-mono font-bold matrix-glitch glow-matrix" data-text="AI CASH">
-              AI CASH
-            </h1>
-            <h2 className="text-4xl md:text-6xl font-mono font-bold matrix-glitch glow-matrix" data-text="REVOLUTION">
-              REVOLUTION
-            </h2>
-          </div>
-
-          {/* Wake up Neo message */}
-          <div className="space-y-6">
-            <TypewriterText
-              text="Wake up, Neo..."
-              speed={100}
-              delay={500}
-              className="text-2xl md:text-3xl font-mono animate-pulse-matrix"
-            />
-            <TypewriterText
-              text="The Matrix of trading has you."
-              speed={75}
-              delay={2000}
-              className="text-xl md:text-2xl font-mono"
-            />
-            <TypewriterText
-              text="But you can be free."
-              speed={75}
-              delay={4000}
-              className="text-xl md:text-2xl font-mono"
-            />
-          </div>
-
-          {/* Pills */}
-          <div className="flex flex-col md:flex-row gap-8 items-center justify-center mt-12">
-            <div className="text-center space-y-2">
-              <div className="w-24 h-24 mx-auto rounded-full bg-red-600 shadow-[0_0_30px_rgba(255,0,0,0.7)] flex items-center justify-center text-white font-mono font-bold text-lg cursor-pointer hover:scale-110 transition-transform">
-                RED
+              {/* Glitch subtitle */}
+              <div className="space-y-2">
+                <p className="text-responsive-lg font-matrix tracking-wide opacity-90">
+                  WELCOME TO THE MATRIX OF TRADING
+                </p>
+                <div className="w-24 h-0.5 bg-matrix-green mx-auto animate-pulse-matrix" />
               </div>
-              <TypewriterText
-                text="Stay in wonderland"
-                speed={50}
-                delay={6000}
-                className="text-sm font-mono text-red-400"
-              />
             </div>
 
-            <div className="text-4xl font-mono animate-pulse-matrix">VS</div>
+            {/* Description */}
+            <div className="space-y-6 mb-12 lg:mb-16">
+              <p className="text-responsive-xl font-matrix text-matrix-bright-green max-w-3xl mx-auto leading-relaxed">
+                AI-powered trading signals for the modern trader
+              </p>
+              <p className="text-responsive-base font-matrix text-matrix-green/80 max-w-2xl mx-auto">
+                Advanced algorithms, real-time analysis, and professional-grade trading tools
+                in a cyberpunk-inspired interface designed for the digital age.
+              </p>
+            </div>
 
-            <div className="text-center space-y-2">
-              <div
-                className="w-24 h-24 mx-auto rounded-full bg-blue-600 shadow-[0_0_30px_rgba(0,100,255,0.7)] flex items-center justify-center text-white font-mono font-bold text-lg cursor-pointer hover:scale-110 transition-transform"
-                onClick={() => setShowWelcome(false)}
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 items-center justify-center mb-16 lg:mb-20">
+              <MatrixButton
+                variant="glow"
+                size="lg"
+                onClick={() => window.location.href = '/auth/login'}
+                className="w-full sm:w-auto"
               >
-                BLUE
-              </div>
-              <TypewriterText
-                text="See how deep the rabbit hole goes"
-                speed={50}
-                delay={6500}
-                className="text-sm font-mono text-blue-400"
-              />
+                ENTER THE MATRIX
+              </MatrixButton>
+              <MatrixButton
+                variant="secondary"
+                size="lg"
+                onClick={() => window.location.href = '/auth/register'}
+                className="w-full sm:w-auto"
+              >
+                JOIN REVOLUTION
+              </MatrixButton>
+            </div>
+
+            {/* Features Grid */}
+            <div className="grid grid-responsive-3 gap-6 lg:gap-8">
+              {[
+                {
+                  title: "AI SIGNALS",
+                  description: "Advanced neural networks analyze market patterns in real-time",
+                  icon: "🧠",
+                  stats: "94.7% Accuracy"
+                },
+                {
+                  title: "REAL-TIME",
+                  description: "Lightning-fast signal delivery with microsecond precision",
+                  icon: "⚡",
+                  stats: "< 100ms Latency"
+                },
+                {
+                  title: "MATRIX UI",
+                  description: "Professional cyberpunk interface optimized for trading",
+                  icon: "💚",
+                  stats: "Mobile First"
+                }
+              ].map((feature, index) => (
+                <div
+                  key={index}
+                  className="matrix-glass matrix-card p-6 lg:p-8 group hover:shadow-matrix-strong transition-all duration-300"
+                >
+                  <div className="text-4xl mb-4 group-hover:animate-matrix-float">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-responsive-lg font-matrix font-bold mb-3 text-matrix-green">
+                    {feature.title}
+                  </h3>
+                  <p className="text-responsive-sm font-matrix text-matrix-green/80 mb-4 leading-relaxed">
+                    {feature.description}
+                  </p>
+                  <div className="text-xs font-matrix text-matrix-bright-green font-bold uppercase tracking-wider">
+                    {feature.stats}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
+        </main>
 
-          {/* Auto continue */}
-          <TypewriterText
-            text="Choose wisely... or continue automatically in 3 seconds"
-            speed={50}
-            delay={8000}
-            className="text-sm font-mono text-matrix-dim"
-          />
+        {/* Mobile Navigation Bar */}
+        <div className="mobile-nav lg:hidden">
+          <div className="flex items-center justify-around w-full">
+            <MatrixButton
+              variant="ghost"
+              size="sm"
+              onClick={() => window.location.href = '/auth/login'}
+              className="flex-1 mx-2"
+            >
+              LOGIN
+            </MatrixButton>
+            <div className="w-px h-8 bg-matrix-green/30" />
+            <MatrixButton
+              variant="ghost"
+              size="sm"
+              onClick={() => window.location.href = '/auth/register'}
+              className="flex-1 mx-2"
+            >
+              REGISTER
+            </MatrixButton>
+          </div>
+        </div>
+
+        {/* Performance Indicators */}
+        <div className="absolute top-4 right-4 text-xs font-matrix text-matrix-green/60 space-y-1 hidden lg:block">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-matrix-green rounded-full animate-pulse-matrix" />
+            <span>SYSTEM ONLINE</span>
+          </div>
+          <div>SIGNALS: ACTIVE</div>
+          <div>LATENCY: 85ms</div>
         </div>
       </div>
-    )
-  }
-
-  if (!isAuthenticated) {
-    return <MatrixLogin />
-  }
-
-  return <MatrixDashboard />
+    </div>
+  )
 }

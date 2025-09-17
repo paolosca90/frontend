@@ -420,15 +420,21 @@ export class TypedHTTPClient {
     // API errors with structured response
     if (error.response?.data) {
       const errorData = error.response.data as APIError;
-      return {
+      const apiError: APIError = {
         code: errorData.code || 'UNKNOWN_ERROR',
         message: errorData.message || error.message,
         details: errorData.details || {},
-        field: errorData.field,
         statusCode: error.response.status as StatusCode,
         timestamp: errorData.timestamp || new Date().toISOString(),
         requestId: error.config?.headers?.[this.config.requestIdHeader] as string || generateRequestId()
       };
+
+      // Only include field if it's actually defined
+      if (errorData.field !== undefined) {
+        (apiError as APIError & { field: string }).field = errorData.field;
+      }
+
+      return apiError;
     }
 
     // Generic error
@@ -469,10 +475,18 @@ export class TypedHTTPClient {
   public async request<TResponse = unknown, TRequest = unknown>(
     config: TypedRequestConfig<TRequest>
   ): Promise<APIResponse<TResponse>> {
+    // Create axios config with proper type compatibility
     const fullConfig: InternalAxiosRequestConfig = {
-      ...config,
       url: config.url || '/',
-      method: config.method || 'GET'
+      method: config.method || 'GET',
+      timeout: config.timeout || this.config.timeout,
+      headers: config.headers ? (config.headers as any) : {},
+      ...(config.data !== undefined && { data: config.data }),
+      ...(config.params && { params: config.params }),
+      ...(config.responseType && { responseType: config.responseType }),
+      ...(config.maxRedirects !== undefined && { maxRedirects: config.maxRedirects }),
+      ...(config.validateStatus && { validateStatus: config.validateStatus }),
+      ...(config.signal && { signal: config.signal })
     };
 
     // Check cache for GET requests
@@ -549,7 +563,12 @@ export class TypedHTTPClient {
     data?: TRequest,
     config?: Omit<TypedRequestConfig<TRequest>, 'method' | 'url' | 'data'>
   ): Promise<APIResponse<TResponse>> {
-    return this.request<TResponse, TRequest>({ ...config, method: 'POST', url, data });
+    return this.request<TResponse, TRequest>({
+      ...config,
+      method: 'POST',
+      url,
+      ...(data !== undefined && { data })
+    });
   }
 
   public put<TResponse = unknown, TRequest = unknown>(
@@ -557,7 +576,12 @@ export class TypedHTTPClient {
     data?: TRequest,
     config?: Omit<TypedRequestConfig<TRequest>, 'method' | 'url' | 'data'>
   ): Promise<APIResponse<TResponse>> {
-    return this.request<TResponse, TRequest>({ ...config, method: 'PUT', url, data });
+    return this.request<TResponse, TRequest>({
+      ...config,
+      method: 'PUT',
+      url,
+      ...(data !== undefined && { data })
+    });
   }
 
   public patch<TResponse = unknown, TRequest = unknown>(
@@ -565,7 +589,12 @@ export class TypedHTTPClient {
     data?: TRequest,
     config?: Omit<TypedRequestConfig<TRequest>, 'method' | 'url' | 'data'>
   ): Promise<APIResponse<TResponse>> {
-    return this.request<TResponse, TRequest>({ ...config, method: 'PATCH', url, data });
+    return this.request<TResponse, TRequest>({
+      ...config,
+      method: 'PATCH',
+      url,
+      ...(data !== undefined && { data })
+    });
   }
 
   public delete<TResponse = unknown>(
