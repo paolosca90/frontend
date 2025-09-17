@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter, Source_Code_Pro, JetBrains_Mono } from 'next/font/google'
+import MatrixSoundManager from '../components/effects/MatrixSoundManager'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -66,6 +67,13 @@ export default function RootLayout({
         <div className="min-h-screen relative overflow-x-hidden">
           {/* Matrix Rain Background - Hidden on mobile for performance */}
           <div className="matrix-rain hidden lg:block" id="matrix-bg" />
+
+          {/* Enhanced Effects */}
+          <div className="glitch-overlay" />
+          <div className="signal-interference" />
+
+          {/* Sound Manager */}
+          <MatrixSoundManager />
 
           {/* Main Content */}
           <div className="relative z-10">

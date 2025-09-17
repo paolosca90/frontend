@@ -1,272 +1,93 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import MatrixCommandCenter from '../../components/dashboard/MatrixCommandCenter'
 import MatrixRain from '../../components/matrix/MatrixRain'
 import MatrixButton from '../../components/ui/MatrixButton'
 
 export default function DashboardPage() {
-  const [selectedInstrument, setSelectedInstrument] = useState('EURUSD')
-  const [selectedTimeframe, setSelectedTimeframe] = useState('1h')
-  const [isGeneratingSignal, setIsGeneratingSignal] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [bootSequence, setBootSequence] = useState<string[]>([])
+  const [systemReady, setSystemReady] = useState(false)
 
-  const handleGenerateSignal = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsGeneratingSignal(true)
+  // Simulate Matrix system boot sequence
+  useEffect(() => {
+    const bootMessages = [
+      'INITIALIZING MATRIX DASHBOARD...',
+      'LOADING NEURAL NETWORKS...',
+      'CONNECTING TO MARKET DATA FEEDS...',
+      'ESTABLISHING SECURE CONNECTIONS...',
+      'CALIBRATING TRADING ALGORITHMS...',
+      'LOADING USER PREFERENCES...',
+      'SYNCHRONIZING PORTFOLIO DATA...',
+      'ACTIVATING REAL-TIME SIGNALS...',
+      'MATRIX SYSTEM: FULLY OPERATIONAL'
+    ]
 
-    // Simulate signal generation
-    setTimeout(() => {
-      setIsGeneratingSignal(false)
-      console.log('Generated signal for:', { selectedInstrument, selectedTimeframe })
-    }, 3000)
-  }
+    bootMessages.forEach((message, index) => {
+      setTimeout(() => {
+        setBootSequence(prev => [...prev, message])
+        if (index === bootMessages.length - 1) {
+          setTimeout(() => {
+            setSystemReady(true)
+            setIsLoading(false)
+          }, 1000)
+        }
+      }, index * 400)
+    })
+  }, [])
 
-  const stats = [
-    { title: 'TOTAL_SIGNALS', value: '1,247', icon: '📊', status: 'online' },
-    { title: 'WIN_RATE', value: '87.3%', icon: '🎯', status: 'online' },
-    { title: 'PROFIT_USD', value: '+$12,847', icon: '💰', status: 'online' },
-    { title: 'ACTIVE_TRADES', value: '5', icon: '⚡', status: 'warning' }
-  ]
+  if (isLoading) {
+    return (
+      <div className="min-h-screen relative bg-black flex items-center justify-center">
+        <MatrixRain className="absolute inset-0" intensity="medium" speed={1.2} />
 
-  const recentSignals = [
-    { pair: 'EUR/USD', action: 'BUY', profit: '+$247', status: 'CLOSED', time: '2 min ago' },
-    { pair: 'GBP/USD', action: 'SELL', profit: '+$183', status: 'CLOSED', time: '5 min ago' },
-    { pair: 'USD/JPY', action: 'BUY', profit: '+$156', status: 'ACTIVE', time: '8 min ago' },
-    { pair: 'BTC/USD', action: 'BUY', profit: '+$425', status: 'ACTIVE', time: '12 min ago' },
-    { pair: 'ETH/USD', action: 'SELL', profit: '+$312', status: 'PENDING', time: '15 min ago' }
-  ]
-
-  return (
-    <div className="min-h-screen relative bg-black text-matrix-green">
-      {/* Matrix Rain Background */}
-      <MatrixRain className="absolute inset-0" density={0.1} speed={0.3} />
-
-      {/* Header */}
-      <header className="relative z-10 border-b border-matrix-green/20 bg-black/80 backdrop-blur-sm sticky top-0">
-        <div className="spacing-responsive">
-          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-responsive-2xl font-matrix font-bold text-matrix-green animate-matrix-glow">
-                MATRIX_DASHBOARD
-              </h1>
-              <div className="w-2 h-2 bg-matrix-green rounded-full animate-pulse-matrix" />
-            </div>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex space-x-6">
-              <MatrixButton variant="ghost" size="sm" onClick={() => window.location.href = '/'}>
-                HOME
-              </MatrixButton>
-              <MatrixButton variant="ghost" size="sm" onClick={() => window.location.href = '/signals'}>
-                SIGNALS
-              </MatrixButton>
-              <MatrixButton variant="danger" size="sm" onClick={() => window.location.href = '/auth/login'}>
-                LOGOUT
-              </MatrixButton>
-            </nav>
+        <div className="relative z-10 text-center max-w-2xl mx-auto p-8">
+          <div className="matrix-glitch text-4xl font-matrix font-bold text-matrix-green mb-8" data-text="MATRIX INITIALIZATION">
+            MATRIX INITIALIZATION
           </div>
-        </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="relative z-10 spacing-responsive">
-        {/* Stats Grid */}
-        <section className="mb-8">
-          <div className="grid grid-responsive-4 gap-4 lg:gap-6">
-            {stats.map((stat, index) => (
-              <div
-                key={index}
-                className="matrix-glass matrix-card p-4 lg:p-6 group hover:shadow-matrix-strong transition-all duration-300"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-2xl group-hover:animate-matrix-float">{stat.icon}</span>
-                  <div className={`w-2 h-2 rounded-full ${
-                    stat.status === 'online' ? 'bg-matrix-green animate-pulse-matrix' :
-                    stat.status === 'warning' ? 'bg-yellow-400 animate-pulse' :
-                    'bg-red-400'
-                  }`} />
-                </div>
-                <h3 className="text-responsive-sm font-matrix font-bold text-matrix-green/80 mb-1">
-                  {stat.title}
-                </h3>
-                <p className="text-responsive-xl font-matrix font-bold text-matrix-green">
-                  {stat.value}
-                </p>
+          <div className="space-y-3 font-matrix text-matrix-green/80 text-left">
+            {bootSequence.map((message, index) => (
+              <div key={index} className="flex items-center gap-3 opacity-0 animate-fade-in">
+                <div className="w-2 h-2 bg-matrix-green rounded-full animate-pulse" />
+                <span>{message}</span>
               </div>
             ))}
+
+            {!systemReady && (
+              <div className="flex items-center gap-3 mt-4">
+                <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
+                <span className="text-matrix-green/60">INITIALIZING SYSTEMS...</span>
+              </div>
+            )}
           </div>
-        </section>
 
-        {/* Main Dashboard Content */}
-        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
-          {/* Recent Signals - Takes 2 columns on large screens */}
-          <section className="lg:col-span-2">
-            <div className="matrix-glass matrix-border-animated p-6 lg:p-8">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
-                <h2 className="text-responsive-xl font-matrix font-bold text-matrix-green mb-2 sm:mb-0">
-                  RECENT_SIGNALS
-                </h2>
-                <MatrixButton variant="secondary" size="sm">
-                  VIEW_ALL
-                </MatrixButton>
+          {systemReady && (
+            <div className="mt-8 p-4 matrix-glass border border-matrix-green">
+              <div className="flex items-center gap-2 text-green-400 font-matrix">
+                <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
+                <span className="font-bold">SYSTEM READY</span>
               </div>
-
-              <div className="space-y-3">
-                {recentSignals.map((signal, index) => (
-                  <div
-                    key={index}
-                    className="matrix-glass p-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 hover:shadow-matrix transition-all duration-300"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <span className="font-matrix font-bold text-matrix-green">
-                        {signal.pair}
-                      </span>
-                      <span className={`px-2 py-1 text-xs font-matrix font-bold rounded ${
-                        signal.action === 'BUY'
-                          ? 'bg-matrix-green text-black'
-                          : 'bg-red-500 text-white'
-                      }`}>
-                        {signal.action}
-                      </span>
-                      <span className={`px-2 py-1 text-xs font-matrix rounded border ${
-                        signal.status === 'ACTIVE'
-                          ? 'border-matrix-green text-matrix-green'
-                          : signal.status === 'CLOSED'
-                          ? 'border-gray-500 text-gray-400'
-                          : 'border-yellow-500 text-yellow-400'
-                      }`}>
-                        {signal.status}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between sm:justify-end space-x-4">
-                      <div className="text-right">
-                        <div className="font-matrix text-matrix-green font-bold">
-                          {signal.profit}
-                        </div>
-                        <div className="text-xs font-matrix text-matrix-green/60">
-                          {signal.time}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <p className="text-sm text-matrix-green/60 mt-2">
+                Press ENTER to access the Matrix Command Center
+              </p>
             </div>
-          </section>
-
-          {/* Signal Generator */}
-          <section>
-            <div className="matrix-glass matrix-border-animated p-6 lg:p-8">
-              <h2 className="text-responsive-xl font-matrix font-bold text-matrix-green mb-6">
-                GENERATE_SIGNAL
-              </h2>
-
-              <form onSubmit={handleGenerateSignal} className="space-y-6">
-                <div className="matrix-form-group">
-                  <label htmlFor="instrument" className="font-matrix">
-                    INSTRUMENT
-                  </label>
-                  <select
-                    id="instrument"
-                    value={selectedInstrument}
-                    onChange={(e) => setSelectedInstrument(e.target.value)}
-                    className="matrix-select w-full px-4 py-3 text-responsive-base font-matrix"
-                  >
-                    <option value="EURUSD">EUR/USD</option>
-                    <option value="GBPUSD">GBP/USD</option>
-                    <option value="USDJPY">USD/JPY</option>
-                    <option value="BTCUSD">BTC/USD</option>
-                    <option value="ETHUSD">ETH/USD</option>
-                    <option value="XAUUSD">XAU/USD</option>
-                  </select>
-                </div>
-
-                <div className="matrix-form-group">
-                  <label htmlFor="timeframe" className="font-matrix">
-                    TIMEFRAME
-                  </label>
-                  <select
-                    id="timeframe"
-                    value={selectedTimeframe}
-                    onChange={(e) => setSelectedTimeframe(e.target.value)}
-                    className="matrix-select w-full px-4 py-3 text-responsive-base font-matrix"
-                  >
-                    <option value="5m">5 Minutes</option>
-                    <option value="15m">15 Minutes</option>
-                    <option value="1h">1 Hour</option>
-                    <option value="4h">4 Hours</option>
-                    <option value="1d">1 Day</option>
-                  </select>
-                </div>
-
-                <MatrixButton
-                  type="submit"
-                  variant="primary"
-                  size="lg"
-                  fullWidth
-                  loading={isGeneratingSignal}
-                  icon={<span>🎯</span>}
-                  iconPosition="left"
-                >
-                  {isGeneratingSignal ? 'ANALYZING_MATRIX...' : 'GENERATE_AI_SIGNAL'}
-                </MatrixButton>
-              </form>
-
-              {/* Quick Stats */}
-              <div className="mt-8 pt-6 border-t border-matrix-green/30">
-                <h3 className="text-sm font-matrix font-bold text-matrix-green/80 mb-4">
-                  SYSTEM_STATUS
-                </h3>
-                <div className="space-y-2 text-xs font-matrix text-matrix-green/60">
-                  <div className="flex justify-between">
-                    <span>AI_ENGINE:</span>
-                    <span className="text-matrix-green">ACTIVE</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>MARKET_DATA:</span>
-                    <span className="text-matrix-green">LIVE</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>LATENCY:</span>
-                    <span className="text-matrix-green">12ms</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>ACCURACY:</span>
-                    <span className="text-matrix-green">87.3%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          )}
         </div>
-      </main>
 
-      {/* Mobile Navigation */}
-      <div className="mobile-nav lg:hidden">
-        <div className="grid grid-cols-3 gap-2 w-full px-4">
-          <MatrixButton
-            variant="ghost"
-            size="sm"
-            onClick={() => window.location.href = '/'}
-          >
-            HOME
-          </MatrixButton>
-          <MatrixButton
-            variant="ghost"
-            size="sm"
-            onClick={() => window.location.href = '/signals'}
-          >
-            SIGNALS
-          </MatrixButton>
-          <MatrixButton
-            variant="danger"
-            size="sm"
-            onClick={() => window.location.href = '/auth/login'}
-          >
-            LOGOUT
-          </MatrixButton>
-        </div>
+        <style jsx>{`
+          @keyframes fade-in {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+          }
+          .animate-fade-in {
+            animation: fade-in 0.5s ease-out forwards;
+          }
+        `}</style>
       </div>
-    </div>
-  )
+    )
+  }
+
+  return <MatrixCommandCenter />
 }
