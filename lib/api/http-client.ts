@@ -475,16 +475,19 @@ export class TypedHTTPClient {
   public async request<TResponse = unknown, TRequest = unknown>(
     config: TypedRequestConfig<TRequest>
   ): Promise<APIResponse<TResponse>> {
+    // Create axios config with proper type compatibility
     const fullConfig: InternalAxiosRequestConfig = {
-      ...config,
       url: config.url || '/',
-      method: config.method || 'GET'
+      method: config.method || 'GET',
+      timeout: config.timeout || this.config.timeout,
+      headers: config.headers ? (config.headers as any) : {},
+      ...(config.data !== undefined && { data: config.data }),
+      ...(config.params && { params: config.params }),
+      ...(config.responseType && { responseType: config.responseType }),
+      ...(config.maxRedirects !== undefined && { maxRedirects: config.maxRedirects }),
+      ...(config.validateStatus && { validateStatus: config.validateStatus }),
+      ...(config.signal && { signal: config.signal })
     };
-
-    // Ensure headers are properly initialized
-    if (!fullConfig.headers) {
-      fullConfig.headers = {};
-    }
 
     // Check cache for GET requests
     if (fullConfig.method === 'GET' && config.cache !== false) {

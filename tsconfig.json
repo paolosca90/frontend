@@ -71,6 +71,7 @@
     ".next",
     "out",
     "dist",
+    "mobile/**/*",
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",
